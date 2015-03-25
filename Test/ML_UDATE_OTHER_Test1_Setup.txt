@@ -1,0 +1,73 @@
+REM -- PRC: Lab Loader AUTOLOADER Test Data 
+REM 
+REM -- Study Setup for ML_UDATE_OTHER_Test1
+REM -- This script adds a definition for the study 02_C_0229 to AutoLoader control 
+REM -- if it does not already exists, or updates it if it already exists
+
+
+INSERT INTO NCI_LABS_MANUAL_LOAD_CTL 
+( STUDY,              HOLD_DATA_CHANGES,      AUTO_CHANGE_HOLD_DATA,
+  AUTO_MOVE_TO_STAGE, AUTO_CHANGE_STAGE_DATA, AUTO_MOVE_TO_LOADER, 
+  AUTO_LOAD_TO_OC,    CREATE_USER,            CREATE_DATE, 
+  MODIFY_USER,        MODIFY_DATE,            STAGE_DATA_CHANGES,
+  INBOUND_STUDY ) 
+select  '02_C_0229',        NULL,                   'N', 
+  'Y',                'N',                    'Y', 
+  'Y',                USER,                   SYSDATE, 
+  NULL,               NULL,                   NULL, 
+  NULL from dual
+  where not exists (select 'X' from nci_labs_manual_load_ctl
+                     where study = '02_C_0229'); 
+
+Update NCI_LABS_MANUAL_LOAD_CTL 
+   set HOLD_DATA_CHANGES      = NULL,
+       AUTO_CHANGE_HOLD_DATA  = 'N',
+       AUTO_MOVE_TO_STAGE     = 'Y', 
+       AUTO_CHANGE_STAGE_DATA = 'N', 
+       AUTO_MOVE_TO_LOADER    = 'Y', 
+       AUTO_LOAD_TO_OC        = 'Y',    
+       MODIFY_USER            = USER,        
+       MODIFY_DATE            = SYSDATE,            
+       STAGE_DATA_CHANGES     = NULL
+where STUDY = '02_C_0229'; 
+
+
+INSERT INTO NCI_LAB_LOAD_CTL ( OC_STUDY, OFF_STUDY_OFFSET_DAYS, STOP_LAB_LOAD_FLAG, DATE_CREATED,
+DATE_MODIFIED, CREATED_BY, MODIFIED_BY, OFF_STUDY_DCM, OFF_STUDY_QUEST, LABORATORY, LOAD_OTHER_LABS,
+REVIEW_STUDY, BLANK_PRESTUDY_USE_ENROLL, LABTESTNAME_IS_OCLABQUEST, PRESTUDY_LAB_DATE_DCM,
+PRESTUDY_LAB_DATE_QUEST, PRESTUDY_OFFSET_DAYS, DATE_CHECK_CODE, ENROLLMENT_DATE_DCM,
+ENROLLMENT_DATE_QUEST, FIND_EVENT, MAP_VERSION, ALLOW_MULT_PATIENTS,
+USE_QUALIFY_VALUE ) 
+select 
+'02_C_0229', 0, 'N',  sysdate,
+NULL, user, NULL, NULL, NULL, 'CDW', 'Y', 
+'N', 'N', 'Y', 'ENROLLMENT', 
+'PRESTUDY_LAB_DATE', 0, 'BOTH', 'ENROLLMENT', 
+'REG_DT', 'N', '1.0', 'Y', NULL
+from dual 
+where not exists (select 'X' from nci_lab_load_ctl where oc_study = '02_C_0229');
+
+
+Update NCI_LAB_LOAD_CTL
+   set OFF_STUDY_OFFSET_DAYS = 0,
+       STOP_LAB_LOAD_FLAG = 'N',
+       OFF_STUDY_DCM      = NULL, 
+       OFF_STUDY_QUEST    = NULL, 
+       LOAD_OTHER_LABS    = 'Y', 
+       LABORATORY         = 'CDW',
+       BLANK_PRESTUDY_USE_ENROLL = 'N', 
+       REVIEW_STUDY = 'N', 
+       LABTESTNAME_IS_OCLABQUEST = 'Y', 
+       PRESTUDY_LAB_DATE_DCM   = 'ENROLLMENT',
+       PRESTUDY_LAB_DATE_QUEST = 'PRESTUDY_LAB_DATE', 
+       PRESTUDY_OFFSET_DAYS = 0,
+       DATE_CHECK_CODE = 'BOTH', 
+       ENROLLMENT_DATE_DCM = 'ENROLLMENT',
+       ENROLLMENT_DATE_QUEST = 'REG_DT', 
+       MAP_VERSION = '1.0', 
+       ALLOW_MULT_PATIENTS = 'Y', 
+       FIND_EVENT = 'N', 
+       USE_QUALIFY_VALUE = NULL
+    where oc_study = '02_C_0229';
+
+COMMIT;

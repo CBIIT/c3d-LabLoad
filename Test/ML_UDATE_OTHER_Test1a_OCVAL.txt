@@ -1,0 +1,15 @@
+REM -- PRC: Lab Loader AUTOLOADER Test Data 
+REM 
+REM -- Simple Test data that tests OTHER LABS panel updates.
+REM -- This is the first file of two.  This file is used to create the panel
+REM -- which will be updated later by file 2.
+REM --
+REM -- Setup: Ensure that the data in the test data HAS NOT been loaded before.
+REM -- 
+
+INSERT INTO NCI_LABS_MANUAL_LOAD_HOLD (
+   STUDY, PATIENT_ID, LAB_SAMPLE_DATE_RAW, LAB_SAMPLE_TIME_RAW, LABORATORY, 
+   LAB_TEST_RESULT, LAB_TEST_UOM, LAB_TEST_RANGE, LAB_TEST_NAME, LAB_TEST_EVENT) 
+ Values 
+   ('LAB_LOADER', '1236789', '0611031315', NULL, 'CDW', 
+    'BLUE', ' ', ' ', 'COLOR', 'OTHER LABS');

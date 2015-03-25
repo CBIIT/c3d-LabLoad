@@ -1,0 +1,1 @@
+sqlldr userid=ops$bdl/prod#777@ocprod control=load_GTOWN_LABMAP.ctl log=load_GTOWN_LABMAP.log

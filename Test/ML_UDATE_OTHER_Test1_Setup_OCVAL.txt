@@ -1,0 +1,90 @@
+REM -- PRC: Lab Loader AUTOLOADER Test Data 
+REM 
+REM -- Study Setup for ML_UDATE_OTHER_Test1 (OCCVAL)
+REM -- This script adds a definition for the study LAB_LOADER to AutoLoader control
+REM -- if it does not already exists, or updates it if it already exists
+
+REM -- This is the OCVAL version of the data set. The data has been setup to reflect
+REM -- studies, patients and lab tests found on OCVAL.
+
+INSERT INTO NCI_LABS_MANUAL_LOAD_CTL 
+( STUDY,              HOLD_DATA_CHANGES,      AUTO_CHANGE_HOLD_DATA,
+  AUTO_MOVE_TO_STAGE, AUTO_CHANGE_STAGE_DATA, AUTO_MOVE_TO_LOADER, 
+  AUTO_LOAD_TO_OC,    CREATE_USER,            CREATE_DATE, 
+  MODIFY_USER,        MODIFY_DATE,            STAGE_DATA_CHANGES,
+  INBOUND_STUDY ) 
+select  
+  'LAB_LOADER',       NULL,                   'N', 
+  'Y',                'Y',                    'Y', 
+  'Y',                USER,                   SYSDATE, 
+  NULL,               NULL,                   NULL, 
+  NULL from dual
+  where not exists (select 'X' from nci_labs_manual_load_ctl
+                     where study = 'LAB_LOADER'); 
+
+Update NCI_LABS_MANUAL_LOAD_CTL 
+   set HOLD_DATA_CHANGES      = NULL,
+       AUTO_CHANGE_HOLD_DATA  = 'N',
+       AUTO_MOVE_TO_STAGE     = 'Y', 
+       AUTO_CHANGE_STAGE_DATA = 'Y', 
+       AUTO_MOVE_TO_LOADER    = 'Y', 
+       AUTO_LOAD_TO_OC        = 'Y',    
+       MODIFY_USER            = USER,        
+       MODIFY_DATE            = SYSDATE,            
+       STAGE_DATA_CHANGES     = 'Declare                              '||
+                                'Begin                                '||
+                                '   update nci_labs_manual_load_stage '||
+                                '      set laboratory = ''CDW''       '||
+                                '    where BATCH_ID = #BATCH_ID#;     '||
+                                '                                     '||
+                                '   Log_Util.LogMessage(''STGMAN - ''||to_char(SQL%RowCount)||'' laboratory values changed in stage manipulation.''); '||
+                                '                                     '||
+                                '   update nci_labs_manual_load_stage '||
+                                '      set LAB_SAMPLE_DATE = to_date(LAB_SAMPLE_DATE_RAW||      ' ||
+                                '                                    LAB_SAMPLE_TIME_RAW,       ' ||
+                                '                                    ''YYMMDDHH24MI'')  ' || 
+                                '    where BATCH_ID = #BATCH_ID#;     '||
+                                '                                     '||
+                                '   Log_Util.LogMessage(''STGMAN - ''||to_char(SQL%RowCount)||'' sample date values changed in stage manipulation.''); '||
+                                '                                     '||
+                                'End;'
+where STUDY = 'LAB_LOADER'; 
+
+INSERT INTO NCI_LAB_LOAD_CTL ( OC_STUDY, OFF_STUDY_OFFSET_DAYS, STOP_LAB_LOAD_FLAG, DATE_CREATED,
+DATE_MODIFIED, CREATED_BY, MODIFIED_BY, OFF_STUDY_DCM, OFF_STUDY_QUEST, LOAD_OTHER_LABS, LABORATORY,
+BLANK_PRESTUDY_USE_ENROLL, REVIEW_STUDY, LABTESTNAME_IS_OCLABQUEST, PRESTUDY_LAB_DATE_DCM,
+PRESTUDY_LAB_DATE_QUEST, PRESTUDY_OFFSET_DAYS, DATE_CHECK_CODE, ENROLLMENT_DATE_DCM,
+ENROLLMENT_DATE_QUEST, MAP_VERSION, ALLOW_MULT_PATIENTS, FIND_EVENT,
+USE_QUALIFY_VALUE ) 
+select  
+'LAB_LOADER', NULL, 'N',  sysdate,
+  NULL, user, NULL, NULL, NULL, 'Y', 'CDW',
+  'N', 'N', 'Y', 'ENROLLMENT', 
+  'PRESTUDY_LAB_DATE', 0, 'BOTH', NULL, 
+  NULL, '1.0', 'Y', 'Y', NULL
+from dual 
+where not exists (select 'X' from nci_lab_load_ctl where oc_study = 'LAB_LOADER');
+
+Update NCI_LAB_LOAD_CTL
+   set OFF_STUDY_OFFSET_DAYS = NULL,
+       STOP_LAB_LOAD_FLAG = 'N',
+       OFF_STUDY_DCM      = NULL, 
+       OFF_STUDY_QUEST    = NULL, 
+       LOAD_OTHER_LABS    = 'Y', 
+       LABORATORY         = 'CDW',
+       BLANK_PRESTUDY_USE_ENROLL = 'N', 
+       REVIEW_STUDY = 'N', 
+       LABTESTNAME_IS_OCLABQUEST = 'Y', 
+       PRESTUDY_LAB_DATE_DCM   = 'ENROLLMENT',
+       PRESTUDY_LAB_DATE_QUEST = 'PRESTUDY_LAB_DATE', 
+       PRESTUDY_OFFSET_DAYS = 0,
+       DATE_CHECK_CODE = 'BOTH', 
+       ENROLLMENT_DATE_DCM = NULL,
+       ENROLLMENT_DATE_QUEST = NULL, 
+       MAP_VERSION = '1.0', 
+       ALLOW_MULT_PATIENTS = 'Y', 
+       FIND_EVENT = 'Y', 
+       USE_QUALIFY_VALUE = 'N'
+    where oc_study = 'LAB_LOADER';
+
+COMMIT;

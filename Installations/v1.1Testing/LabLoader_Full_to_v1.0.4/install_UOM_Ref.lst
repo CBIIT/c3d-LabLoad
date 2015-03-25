@@ -1,0 +1,13 @@
+
+Execution Date      User                                                                                                                                        
+------------------- ------------------------------                                                                                                              
+03/18/2013 17:15:16 OPS$LABLDR                                                                                                                                  
+
+Elapsed: 00:00:00.02
+...Installing Primary UOM Table
+CREATE TABLE NCI_UOM_MAIN
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+

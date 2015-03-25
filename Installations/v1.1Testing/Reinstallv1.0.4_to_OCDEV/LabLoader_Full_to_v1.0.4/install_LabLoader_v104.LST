@@ -1,0 +1,866 @@
+
+Install Date         Install User                                               
+-------------------- ------------------------------                             
+09-APR-2013 16:39:10 OPS$BDL                                                    
+
+SQL> 
+SQL> @alter_tab_nci_lab_load_ctl_qual_val.sql
+SQL> Alter table nci_lab_load_ctl
+  2  add (use_qualify_value varchar2(1));
+add (use_qualify_value varchar2(1))
+     *
+ERROR at line 2:
+ORA-01430: column being added already exists in table 
+
+
+SQL> 
+SQL> COMMENT ON COLUMN NCI_LAB_LOAD_CTL.USE_QUALIFY_VALUE
+  2  	     IS 'Set to ''Y'' to have study use QUALIFYING_VALUE from NCI_LABS, set to ''N'' to leave QUALIFYING_VALUE blank';
+
+Comment created.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> @alter_tab_nci_labs_qual_val.sql
+SQL> Alter table nci_labs
+  2  add (qualifying_value varchar2(80));
+add (qualifying_value varchar2(80))
+     *
+ERROR at line 2:
+ORA-01430: column being added already exists in table 
+
+
+SQL> 
+SQL> COMMENT ON COLUMN NCI_LABS.QUALIFYING_VALUE
+  2  	     IS 'Used to pass QUALIFYING_VALUE to the DCM in C3D';
+
+Comment created.
+
+SQL> 
+SQL> @NCI_LABS_AUTOLOAD_HOLD.sql
+SQL> -- Drop table first
+SQL> DROP TABLE NCI_LABS_AUTOLOAD_HOLD;
+
+Table dropped.
+
+SQL> 
+SQL> -- Create table
+SQL> CREATE TABLE NCI_LABS_AUTOLOAD_HOLD
+  2  (
+  3    STUDY	      VARCHAR2(15 BYTE),
+  4    CREATE_DATE    DATE,
+  5    CREATE_USER    VARCHAR2(30 BYTE),
+  6    RESTART_DATE   DATE,
+  7    RESTART_COUNT  NUMBER(6),
+  8    REQUESTS       NUMBER(6)
+  9  )
+ 10  TABLESPACE USERS
+ 11  PCTUSED	40
+ 12  PCTFREE	10
+ 13  INITRANS	1
+ 14  MAXTRANS	255
+ 15  STORAGE	(
+ 16  		 INITIAL	  128K
+ 17  		 NEXT		  128K
+ 18  		 MINEXTENTS	  1
+ 19  		 MAXEXTENTS	  2147483645
+ 20  		 PCTINCREASE	  0
+ 21  		 FREELISTS	  1
+ 22  		 FREELIST GROUPS  1
+ 23  		 BUFFER_POOL	  DEFAULT
+ 24  		)
+ 25  LOGGING
+ 26  NOCOMPRESS
+ 27  NOCACHE
+ 28  NOPARALLEL
+ 29  NOMONITORING;
+
+Table created.
+
+SQL> 
+SQL> 
+SQL> @NCI_LABS_MANUAL_LOAD_BATCHES.sql
+SQL> -- Drop table first
+SQL> DROP TABLE NCI_LABS_MANUAL_LOAD_BATCHES;
+
+Table dropped.
+
+SQL> 
+SQL> -- create table
+SQL> CREATE TABLE NCI_LABS_MANUAL_LOAD_BATCHES
+  2  (
+  3    BATCH_ID        NUMBER(10),
+  4    SUBMIT_BY       VARCHAR2(30 BYTE),
+  5    SUBMIT_DATE     DATE,
+  6    JOB_ID	       NUMBER(10),
+  7    JOB_START_DATE  DATE,
+  8    JOB_STOP_DATE   DATE,
+  9    BATCH_STATUS    VARCHAR2(1 BYTE) 	     DEFAULT 'N',
+ 10    STATUS_COMMENT  VARCHAR2(200 BYTE)	     DEFAULT 'New Batch'
+ 11  )
+ 12  TABLESPACE USERS
+ 13  PCTUSED	40
+ 14  PCTFREE	10
+ 15  INITRANS	1
+ 16  MAXTRANS	255
+ 17  STORAGE	(
+ 18  		 INITIAL	  128K
+ 19  		 NEXT		  128K
+ 20  		 MINEXTENTS	  1
+ 21  		 MAXEXTENTS	  2147483645
+ 22  		 PCTINCREASE	  0
+ 23  		 FREELISTS	  1
+ 24  		 FREELIST GROUPS  1
+ 25  		 BUFFER_POOL	  DEFAULT
+ 26  		)
+ 27  LOGGING
+ 28  NOCOMPRESS
+ 29  NOCACHE
+ 30  NOPARALLEL
+ 31  NOMONITORING;
+
+Table created.
+
+SQL> 
+SQL> CREATE INDEX NLMLB_IDX ON NCI_LABS_MANUAL_LOAD_BATCHES
+  2  (BATCH_ID)
+  3  LOGGING
+  4  TABLESPACE USERS
+  5  PCTFREE	10
+  6  INITRANS	2
+  7  MAXTRANS	255
+  8  STORAGE	(
+  9  		 INITIAL	  128K
+ 10  		 NEXT		  128K
+ 11  		 MINEXTENTS	  1
+ 12  		 MAXEXTENTS	  2147483645
+ 13  		 PCTINCREASE	  0
+ 14  		 FREELISTS	  1
+ 15  		 FREELIST GROUPS  1
+ 16  		 BUFFER_POOL	  DEFAULT
+ 17  		)
+ 18  NOPARALLEL;
+
+Index created.
+
+SQL> 
+SQL> 
+SQL> @NCI_LABS_MANUAL_LOAD_CTL.sql
+SQL> -- Drop table first
+SQL> DROP TABLE NCI_LABS_MANUAL_LOAD_CTL
+  2  ;
+
+Table dropped.
+
+SQL> 
+SQL> 
+SQL> -- create table
+SQL> CREATE TABLE NCI_LABS_MANUAL_LOAD_CTL
+  2  (
+  3    STUDY		       VARCHAR2(200 BYTE),
+  4    HOLD_DATA_CHANGES       VARCHAR2(4000 BYTE),
+  5    AUTO_CHANGE_HOLD_DATA   VARCHAR2(1 BYTE),
+  6    AUTO_MOVE_TO_STAGE      VARCHAR2(1 BYTE),
+  7    AUTO_CHANGE_STAGE_DATA  VARCHAR2(1 BYTE),
+  8    AUTO_MOVE_TO_LOADER     VARCHAR2(1 BYTE),
+  9    AUTO_LOAD_TO_OC	       VARCHAR2(1 BYTE),
+ 10    CREATE_USER	       VARCHAR2(30 BYTE),
+ 11    CREATE_DATE	       DATE,
+ 12    MODIFY_USER	       VARCHAR2(30 BYTE),
+ 13    MODIFY_DATE	       DATE,
+ 14    STAGE_DATA_CHANGES      VARCHAR2(4000 BYTE),
+ 15    INBOUND_STUDY	       VARCHAR2(200 BYTE)
+ 16  )
+ 17  TABLESPACE USERS
+ 18  PCTUSED	40
+ 19  PCTFREE	10
+ 20  INITRANS	1
+ 21  MAXTRANS	255
+ 22  STORAGE	(
+ 23  		 INITIAL	  128K
+ 24  		 NEXT		  128K
+ 25  		 MINEXTENTS	  1
+ 26  		 MAXEXTENTS	  2147483645
+ 27  		 PCTINCREASE	  0
+ 28  		 FREELISTS	  1
+ 29  		 FREELIST GROUPS  1
+ 30  		 BUFFER_POOL	  DEFAULT
+ 31  		)
+ 32  LOGGING
+ 33  NOCOMPRESS
+ 34  NOCACHE
+ 35  NOPARALLEL
+ 36  NOMONITORING;
+
+Table created.
+
+SQL> 
+SQL> CREATE UNIQUE INDEX ML_CTL_PK ON NCI_LABS_MANUAL_LOAD_CTL
+  2  (STUDY)
+  3  LOGGING
+  4  TABLESPACE USERS
+  5  PCTFREE	10
+  6  INITRANS	2
+  7  MAXTRANS	255
+  8  STORAGE	(
+  9  		 INITIAL	  128K
+ 10  		 NEXT		  128K
+ 11  		 MINEXTENTS	  1
+ 12  		 MAXEXTENTS	  2147483645
+ 13  		 PCTINCREASE	  0
+ 14  		 FREELISTS	  1
+ 15  		 FREELIST GROUPS  1
+ 16  		 BUFFER_POOL	  DEFAULT
+ 17  		)
+ 18  NOPARALLEL;
+
+Index created.
+
+SQL> 
+SQL> ALTER TABLE NCI_LABS_MANUAL_LOAD_CTL ADD (
+  2    CONSTRAINT ML_CTL_PK
+  3   PRIMARY KEY
+  4   (STUDY)
+  5  	 USING INDEX
+  6  	 TABLESPACE USERS
+  7  	 PCTFREE    10
+  8  	 INITRANS   2
+  9  	 MAXTRANS   255
+ 10  	 STORAGE    (
+ 11  		     INITIAL	      128K
+ 12  		     NEXT	      128K
+ 13  		     MINEXTENTS       1
+ 14  		     MAXEXTENTS       2147483645
+ 15  		     PCTINCREASE      0
+ 16  		     FREELISTS	      1
+ 17  		     FREELIST GROUPS  1
+ 18  		    ));
+
+Table altered.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> @NCI_LABS_MANUAL_LOAD_HOLD.sql
+SQL> -- drop table first
+SQL> DROP TABLE NCI_LABS_MANUAL_LOAD_HOLD;
+
+Table dropped.
+
+SQL> 
+SQL> -- create table
+SQL> CREATE TABLE NCI_LABS_MANUAL_LOAD_HOLD
+  2  (
+  3    STUDY		    VARCHAR2(200 BYTE),
+  4    PATIENT_ID	    VARCHAR2(10 BYTE),
+  5    OC_PATIENT_POS	    VARCHAR2(12 BYTE),
+  6    LAB_SAMPLE_DATE_RAW  VARCHAR2(20 BYTE),
+  7    LAB_SAMPLE_TIME_RAW  VARCHAR2(20 BYTE),
+  8    LAB_TEST_NAME	    VARCHAR2(200 BYTE),
+  9    LAB_TEST_RESULT	    VARCHAR2(300 BYTE),
+ 10    LAB_TEST_UOM	    VARCHAR2(20 BYTE),
+ 11    LAB_TEST_RANGE	    VARCHAR2(80 BYTE),
+ 12    LABORATORY	    VARCHAR2(10 BYTE),
+ 13    RECEIVED_DATE	    DATE,
+ 14    RECORD_ID	    NUMBER(10),
+ 15    LAB_TEST_EVENT	    VARCHAR2(40 BYTE),
+ 16    BATCH_ID 	    INTEGER,
+ 17    LAB_TEST_RANGE_LOW   VARCHAR2(30 BYTE),
+ 18    LAB_TEST_RANGE_HIGH  VARCHAR2(30 BYTE),
+ 19    QUALIFYING_VALUE     VARCHAR2(80 BYTE),
+ 20    STATUS_CODE	    VARCHAR2(1 BYTE)	     DEFAULT 'N',
+ 21    STATUS_COMMENT	    VARCHAR2(200 BYTE)	     DEFAULT 'New Record'
+ 22  )
+ 23  TABLESPACE USERS
+ 24  PCTUSED	40
+ 25  PCTFREE	10
+ 26  INITRANS	1
+ 27  MAXTRANS	255
+ 28  STORAGE	(
+ 29  		 INITIAL	  128K
+ 30  		 NEXT		  128K
+ 31  		 MINEXTENTS	  1
+ 32  		 MAXEXTENTS	  2147483645
+ 33  		 PCTINCREASE	  0
+ 34  		 FREELISTS	  1
+ 35  		 FREELIST GROUPS  1
+ 36  		 BUFFER_POOL	  DEFAULT
+ 37  		)
+ 38  LOGGING
+ 39  NOCOMPRESS
+ 40  NOCACHE
+ 41  NOPARALLEL
+ 42  NOMONITORING;
+
+Table created.
+
+SQL> 
+SQL> COMMENT ON COLUMN NCI_LABS_MANUAL_LOAD_HOLD.LAB_TEST_EVENT IS 'This column holds the EVENT that the investigator has assigned to the lab already.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN NCI_LABS_MANUAL_LOAD_HOLD.BATCH_ID IS 'Batch ID is assigned at commit to ensure entire group of data is processed together.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN NCI_LABS_MANUAL_LOAD_HOLD.QUALIFYING_VALUE IS 'Use to pass QUALIFYING_VALUE to the DCM in C3D.';
+
+Comment created.
+
+SQL> 
+SQL> CREATE OR REPLACE TRIGGER BI_ER_MLT
+  2  before insert
+  3  on NCI_LABS_MANUAL_LOAD_HOLD
+  4  REFERENCING OLD AS OLD NEW AS NEW
+  5  FOR EACH ROW
+  6  Begin
+  7  	Declare
+  8  	  /* Ekagra Software Technologies						  */
+  9  	  /* Table Trigger to set audit trail columns and launch the Lab Load Autoloader  */
+ 10  	  /*										  */
+ 11  	  Hold_Number Number;	    -- Holds Job Id Number during checking
+ 12  	  Hold_Found  Varchar2(1);  -- Holds Found/Not-Found results
+ 13  
+ 14  	Begin
+ 15  
+ 16  	   -- Set date record created
+ 17  	   :new.received_date := sysdate;
+ 18  
+ 19  	   -- Set Record ID for the record received, used for tracking into NCI_LABS
+ 20  	   select nci_manual_load_seq.nextval
+ 21  	     into :new.record_id
+ 22  	     from dual;
+ 23  
+ 24  	   If sql%notfound Then
+ 25  	      -- If sequence cannot be created, raise an error to the calling application
+ 26  	      Raise_application_error(-20041,
+ 27  		   'Warning: Record Id cannot be issued, NCI_MANUAL_LOAD_SEQ not working');
+ 28  	   End If;
+ 29  
+ 30  	   -- Get Batch ID for group of committed records, each group should have
+ 31  	   -- a unique ID as these records are processed as a group through the AutoLoader
+ 32  	   Begin
+ 33  	      -- Get the current value from the Batch ID Sequence.  If this is the
+ 34  	      -- first time trying, an error should occur because the sequnce was
+ 35  	      -- not initiated.  That way we always get a NEW id for each batch.
+ 36  	      select nci_manual_load_batch_seq.currval
+ 37  		into hold_number
+ 38  		from dual;
+ 39  
+ 40  	   Exception
+ 41  	      when others then
+ 42  		 -- if ANY error occurs from last statement, get a NEW id number.
+ 43  		 -- This is the behavior we are expecting.  The next record through this
+ 44  		 -- routine will get the same Batch ID, because we check current value first
+ 45  		 select nci_manual_load_batch_seq.nextval
+ 46  		   into hold_number
+ 47  		   from dual;
+ 48  
+ 49  		 -- If we do not get a sequence, there is a problem. Raise an error to the
+ 50  		 -- calling program.
+ 51  		 If sql%notfound Then
+ 52  		    Raise_application_error(-20041,
+ 53  		      'Warning: Batch Id cannot be issued, NCI_MANUAL_LOAD_BATCH_SEQ not working');
+ 54  		 End If;
+ 55  	   End;
+ 56  
+ 57  	   Begin
+ 58  	      -- Check the Batch ID we just polled.  If it has already been used for a started
+ 59  	      -- Job, then we need a different number.	This can happen when the DB connection is
+ 60  	      -- not closed and reused, or when the user commits two seperate batches of records
+ 61  	      -- from the command line.
+ 62  	      Select 'X' into Hold_Found
+ 63  		from nci_labs_manual_load_batches
+ 64  	       where batch_id = hold_number
+ 65  		 and job_id is not null;
+ 66  
+ 67  	      Begin
+ 68  		 -- get a new sequence number because the above statement found it in the submitted
+ 69  		 -- batches table
+ 70  		 select nci_manual_load_batch_seq.nextval
+ 71  		   into hold_number
+ 72  		   from dual;
+ 73  
+ 74  		 -- If we do not get a sequence, there is a problem. Raise an error to the
+ 75  		 -- calling program.
+ 76  	      Exception
+ 77  		 When Others Then
+ 78  		    Raise_application_error(-20041,
+ 79  		      'Warning: Batch Id cannot be issued, NCI_MANUAL_LOAD_BATCH_SEQ not working');
+ 80  	      End;
+ 81  
+ 82  	   Exception
+ 83  	     When Others Then
+ 84  		-- If an error occurs when checking the existence of the Batch ID in the
+ 85  		-- summitted batches table, then the sequence is okay and nothing needs done
+ 86  		Null;
+ 87  	   End;
+ 88  
+ 89  	   -- Assign the Batch ID to the tables Batch ID column.
+ 90  	   :new.batch_id := hold_number;
+ 91  
+ 92  	   Begin
+ 93  
+ 94  	      -- Write the Batch ID, the user committing the data and the Date into the
+ 95  	      -- submitted batches table of the Autoloader.
+ 96  	      -- The AutoLoader WATCHER application will see it and execute.
+ 97  	      Insert into NCI_LABS_MANUAL_LOAD_BATCHES
+ 98  		    (BATCH_ID, SUBMIT_BY, SUBMIT_DATE)
+ 99  	      select Hold_Number, USER, SYSDATE
+100  		from DUAL
+101  	       where not exists (select 'X'
+102  				   from NCI_LABS_MANUAL_LOAD_BATCHES
+103  				  where BATCH_ID = Hold_Number);
+104  
+105  	      -- Request that the Lab Loader AutoLoader start.	This ensures
+106  	      -- that the batches of records committed will be processed by the
+107  	      -- AutoLoader by ensure that the Watcher is running.
+108  	      -- Nci_labs_manual_loader.AutoLoad_Watcher_Control ('START');
+109  
+110  	   End;
+111  
+112  	End;
+113  
+114  End;
+115  /
+
+Trigger created.
+
+SQL> SHOW ERRORS;
+No errors.
+SQL> 
+SQL> 
+SQL> CREATE PUBLIC SYNONYM NCI_LABS_MANUAL_LOAD_HOLD FOR NCI_LABS_MANUAL_LOAD_HOLD;
+CREATE PUBLIC SYNONYM NCI_LABS_MANUAL_LOAD_HOLD FOR NCI_LABS_MANUAL_LOAD_HOLD
+                      *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> 
+SQL> GRANT DELETE, INSERT, SELECT, UPDATE ON  NCI_LABS_MANUAL_LOAD_HOLD TO C3PR;
+
+Grant succeeded.
+
+SQL> 
+SQL> 
+SQL> @nci_labs_manual_load_trigger.sql
+SQL> create or replace trigger BI_ER_MLT
+  2  before insert
+  3  on NCI_LABS_MANUAL_LOAD_HOLD
+  4  REFERENCING OLD AS OLD NEW AS NEW
+  5  FOR EACH ROW
+  6  Begin
+  7  	Declare
+  8  	  /* Ekagra Software Technologies						  */
+  9  	  /* Table Trigger to set audit trail columns and launch the Lab Load Autoloader  */
+ 10  	  /*										  */
+ 11  	  Hold_Number Number;	    -- Holds Job Id Number during checking
+ 12  	  Hold_Found  Varchar2(1);  -- Holds Found/Not-Found results
+ 13  
+ 14  	Begin
+ 15  
+ 16  	   -- Set date record created
+ 17  	   :new.received_date := sysdate;
+ 18  
+ 19  	   -- Set Record ID for the record received, used for tracking into NCI_LABS
+ 20  	   select nci_manual_load_seq.nextval
+ 21  	     into :new.record_id
+ 22  	     from dual;
+ 23  
+ 24  	   If sql%notfound Then
+ 25  	      -- If sequence cannot be created, raise an error to the calling application
+ 26  	      Raise_application_error(-20041,
+ 27  		   'Warning: Record Id cannot be issued, NCI_MANUAL_LOAD_SEQ not working');
+ 28  	   End If;
+ 29  
+ 30  	   -- Get Batch ID for group of committed records, each group should have
+ 31  	   -- a unique ID as these records are processed as a group through the AutoLoader
+ 32  	   Begin
+ 33  	      -- Get the current value from the Batch ID Sequence.  If this is the
+ 34  	      -- first time trying, an error should occur because the sequnce was
+ 35  	      -- not initiated.  That way we always get a NEW id for each batch.
+ 36  	      select nci_manual_load_batch_seq.currval
+ 37  		into hold_number
+ 38  		from dual;
+ 39  
+ 40  	   Exception
+ 41  	      when others then
+ 42  		 -- if ANY error occurs from last statement, get a NEW id number.
+ 43  		 -- This is the behavior we are expecting.  The next record through this
+ 44  		 -- routine will get the same Batch ID, because we check current value first
+ 45  		 select nci_manual_load_batch_seq.nextval
+ 46  		   into hold_number
+ 47  		   from dual;
+ 48  
+ 49  		 -- If we do not get a sequence, there is a problem. Raise an error to the
+ 50  		 -- calling program.
+ 51  		 If sql%notfound Then
+ 52  		    Raise_application_error(-20041,
+ 53  		      'Warning: Batch Id cannot be issued, NCI_MANUAL_LOAD_BATCH_SEQ not working');
+ 54  		 End If;
+ 55  	   End;
+ 56  
+ 57  	   Begin
+ 58  	      -- Check the Batch ID we just polled.  If it has already been used for a started
+ 59  	      -- Job, then we need a different number.	This can happen when the DB connection is
+ 60  	      -- not closed and reused, or when the user commits two seperate batches of records
+ 61  	      -- from the command line.
+ 62  	      Select 'X' into Hold_Found
+ 63  		from nci_labs_manual_load_batches
+ 64  	       where batch_id = hold_number
+ 65  		 and job_id is not null;
+ 66  
+ 67  	      Begin
+ 68  		 -- get a new sequence number because the above statement found it in the submitted
+ 69  		 -- batches table
+ 70  		 select nci_manual_load_batch_seq.nextval
+ 71  		   into hold_number
+ 72  		   from dual;
+ 73  
+ 74  		 -- If we do not get a sequence, there is a problem. Raise an error to the
+ 75  		 -- calling program.
+ 76  	      Exception
+ 77  		 When Others Then
+ 78  		    Raise_application_error(-20041,
+ 79  		      'Warning: Batch Id cannot be issued, NCI_MANUAL_LOAD_BATCH_SEQ not working');
+ 80  	      End;
+ 81  
+ 82  	   Exception
+ 83  	     When Others Then
+ 84  		-- If an error occurs when checking the existence of the Batch ID in the
+ 85  		-- summitted batches table, then the sequence is okay and nothing needs done
+ 86  		Null;
+ 87  	   End;
+ 88  
+ 89  	   -- Assign the Batch ID to the tables Batch ID column.
+ 90  	   :new.batch_id := hold_number;
+ 91  
+ 92  	   Begin
+ 93  
+ 94  	      -- Write the Batch ID, the user committing the data and the Date into the
+ 95  	      -- submitted batches table of the Autoloader.
+ 96  	      -- The AutoLoader WATCHER application will see it and execute.
+ 97  	      Insert into NCI_LABS_MANUAL_LOAD_BATCHES
+ 98  		    (BATCH_ID, SUBMIT_BY, SUBMIT_DATE)
+ 99  	      select Hold_Number, USER, SYSDATE
+100  		from DUAL
+101  	       where not exists (select 'X'
+102  				   from NCI_LABS_MANUAL_LOAD_BATCHES
+103  				  where BATCH_ID = Hold_Number);
+104  
+105  	      -- Request that the Lab Loader AutoLoader start.	This ensures
+106  	      -- that the batches of records committed will be processed by the
+107  	      -- AutoLoader by ensure that the Watcher is running.
+108  	      -- Nci_labs_manual_loader.AutoLoad_Watcher_Control ('START');
+109  
+110  	   End;
+111  
+112  	End;
+113  
+114  End;
+115  /
+
+Trigger created.
+
+SQL> 
+SQL> 
+SQL> @NCI_LABS_MANUAL_LOAD_STAGE.sql
+SQL> -- drop table first
+SQL> DROP TABLE NCI_LABS_MANUAL_LOAD_STAGE;
+
+Table dropped.
+
+SQL> 
+SQL> -- create table
+SQL> CREATE TABLE NCI_LABS_MANUAL_LOAD_STAGE
+  2  (
+  3    STUDY		    VARCHAR2(15 BYTE),
+  4    PATIENT_ID	    VARCHAR2(10 BYTE),
+  5    OC_PATIENT_POS	    VARCHAR2(12 BYTE),
+  6    LAB_SAMPLE_DATE_RAW  VARCHAR2(20 BYTE),
+  7    LAB_SAMPLE_TIME_RAW  VARCHAR2(20 BYTE),
+  8    LAB_TEST_NAME	    VARCHAR2(200 BYTE),
+  9    LAB_TEST_RESULT	    VARCHAR2(20 BYTE),
+ 10    LAB_TEST_UOM	    VARCHAR2(20 BYTE),
+ 11    LAB_TEST_RANGE	    VARCHAR2(80 BYTE),
+ 12    LABORATORY	    VARCHAR2(10 BYTE),
+ 13    RECORD_ID	    NUMBER(10),
+ 14    RECEIVED_DATE	    DATE,
+ 15    LAB_SAMPLE_DATE	    DATE,
+ 16    STAGE_DATE	    DATE,
+ 17    STAGE_USER	    VARCHAR2(240 BYTE),
+ 18    STAGE_NOTE	    VARCHAR2(200 BYTE),
+ 19    STAGE_ID 	    NUMBER(10),
+ 20    STATUS_FLAG	    VARCHAR2(1 BYTE),
+ 21    PROCESS_DATE	    DATE,
+ 22    PROCESS_USER	    VARCHAR2(240 BYTE),
+ 23    LAB_TEST_EVENT	    VARCHAR2(40 BYTE),
+ 24    BATCH_ID 	    NUMBER,
+ 25    LAB_TEST_RANGE_LOW   VARCHAR2(30 BYTE),
+ 26    LAB_TEST_RANGE_HIGH  VARCHAR2(30 BYTE),
+ 27    QUALIFYING_VALUE     VARCHAR2(80 BYTE),
+ 28    STATUS_COMMENT	    VARCHAR2(200 BYTE)	     DEFAULT 'New Record'
+ 29  )
+ 30  TABLESPACE USERS
+ 31  PCTUSED	40
+ 32  PCTFREE	10
+ 33  INITRANS	1
+ 34  MAXTRANS	255
+ 35  STORAGE	(
+ 36  		 INITIAL	  128K
+ 37  		 NEXT		  128K
+ 38  		 MINEXTENTS	  1
+ 39  		 MAXEXTENTS	  2147483645
+ 40  		 PCTINCREASE	  0
+ 41  		 FREELISTS	  1
+ 42  		 FREELIST GROUPS  1
+ 43  		 BUFFER_POOL	  DEFAULT
+ 44  		)
+ 45  LOGGING
+ 46  NOCOMPRESS
+ 47  NOCACHE
+ 48  NOPARALLEL
+ 49  NOMONITORING;
+
+Table created.
+
+SQL> 
+SQL> COMMENT ON COLUMN NCI_LABS_MANUAL_LOAD_STAGE.LAB_TEST_EVENT IS 'This column holds the CPE (Event) as assigned by the investigator.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN NCI_LABS_MANUAL_LOAD_STAGE.QUALIFYING_VALUE IS 'Used to pass QUALIFYING_VALUE to the DCM in C3D';
+
+Comment created.
+
+SQL> 
+SQL> GRANT DELETE, INSERT, SELECT, UPDATE ON  NCI_LABS_MANUAL_LOAD_STAGE TO C3PR;
+
+Grant succeeded.
+
+SQL> 
+SQL> 
+SQL> @NCI_LABS_DCM_QUESTS_VW.sql
+SQL> CREATE OR REPLACE FORCE VIEW NCI_LABS_DCM_QUESTS_VW
+  2  (RECORD_ID, OC_STUDY, OC_LAB_PANEL,
+  3   OC_LAB_SUBSET, OC_LAB_EVENT, OC_PATIENT_POS,
+  4   LOAD_FLAG, OC_LAB_QUESTION, RESULT, UNIT,
+  5   SAMPLE_DATETIME, REPEAT_SN)
+  6  AS
+  7  select a.RECORD_ID, b.study oc_study, b.DCM_NAME oc_lab_panel,
+  8  	    b.SUBSET_NAME oc_lab_subset, b.cpe_name oc_lab_event, a.oc_patient_pos,
+  9  	    a.load_flag, b.oc_lab_question, a.result, a.unit,
+ 10  	    a.sample_datetime, b.REPEAT_SN
+ 11    from nci_labs a,
+ 12  	    NCI_STUDY_LABDCM_EVENTS_TB b
+ 13  Where a.oc_study	      (+)= b.STUDY
+ 14    and a.OC_LAB_PANEL     (+)= b.DCM_NAME
+ 15    and a.OC_LAB_SUBSET    (+)= b.SUBSET_NAME
+ 16    and a.oc_lab_question  (+)= b.oc_lab_question
+ 17    and a.oc_lab_event     (+)= b.CPE_NAME
+ 18  /
+
+View created.
+
+SQL> 
+SQL> @NCI_LAB_LOAD_STUDY_CTLS_VW.sql
+SQL> 
+SQL> CREATE OR REPLACE FORCE VIEW NCI_LAB_LOAD_STUDY_CTLS_VW
+  2  (OC_STUDY, STOP_LAB_LOAD_FLAG, LABORATORY, LOAD_OTHER_LABS, REVIEW_STUDY,
+  3   LABTESTNAME_IS_OCLABQUEST, FIND_EVENT, DATE_CHECK_CODE, OFF_STUDY_DCM, OFF_STUDY_QUEST,
+  4   OFF_STUDY_OFFSET_DAYS, PRESTUDY_LAB_DATE_DCM, PRESTUDY_LAB_DATE_QUEST, PRESTUDY_OFFSET_DAYS, BLANK_PRESTUDY_USE_ENROLL,
+  5   ENROLLMENT_DATE_DCM, ENROLLMENT_DATE_QUEST, MAP_VERSION, ALLOW_MULT_PATIENTS, USE_QUALIFY_VALUE,
+  6   BASED_ON_STUDY, CLINICAL_STUDY_ID)
+  7  AS
+  8  SELECT a.oc_study,
+  9  	    NVL (TRIM (a.stop_lab_load_flag), b.stop_lab_load_flag) stop_lab_load_flag,
+ 10  	    NVL (TRIM (a.laboratory), b.laboratory) laboratory,
+ 11  	    NVL (TRIM (a.load_other_labs), b.load_other_labs) load_other_labs,
+ 12  	    NVL (TRIM (a.review_study), b.review_study) review_study,
+ 13  	    NVL (TRIM (a.labtestname_is_oclabquest), b.labtestname_is_oclabquest) labtestname_is_oclabquest,
+ 14  	    NVL (TRIM (a.find_event), b.find_event) find_event,
+ 15  	    NVL (TRIM (a.date_check_code), b.date_check_code) date_check_code,
+ 16  	    NVL (TRIM (a.off_study_dcm), b.off_study_dcm) off_study_dcm,
+ 17  	    NVL (TRIM (a.off_study_quest), b.off_study_quest) off_study_quest,
+ 18  	    NVL (a.off_study_offset_days, b.off_study_offset_days) off_study_offset_days,
+ 19  	    NVL (TRIM (a.prestudy_lab_date_dcm), b.prestudy_lab_date_dcm) prestudy_lab_date_dcm,
+ 20  	    NVL (TRIM (a.prestudy_lab_date_quest), b.prestudy_lab_date_quest) prestudy_lab_date_quest,
+ 21  	    NVL (a.prestudy_offset_days, b.prestudy_offset_days) prestudy_offset_days,
+ 22  	    NVL (TRIM (a.blank_prestudy_use_enroll), b.blank_prestudy_use_enroll) blank_prestudy_use_enroll,
+ 23  	    NVL (TRIM (a.enrollment_date_dcm), b.enrollment_date_dcm) enrollment_date_dcm,
+ 24  	    NVL (TRIM (a.enrollment_date_quest), b.enrollment_date_quest) enrollment_date_quest,
+ 25  	    NVL (TRIM (a.map_version), b.map_version) map_version,
+ 26  	    NVL (TRIM (a.allow_mult_patients), b.allow_mult_patients) allow_mult_patients,
+ 27  	    NVL (TRIM (a.use_qualify_value), b.use_qualify_value) use_qualify_value,
+ 28  	    a.oc_study based_on_study,
+ 29  	    c.clinical_study_id
+ 30    FROM clinical_studies c,
+ 31  	    nci_lab_load_ctl a,
+ 32  	    nci_lab_load_ctl b
+ 33   WHERE c.study = a.oc_study
+ 34  	AND b.oc_study = 'ALL'
+ 35  UNION
+ 36  SELECT c.study,
+ 37  	    a.stop_lab_load_flag stop_lab_load_flag,
+ 38  	    a.laboratory laboratory,
+ 39  	    a.load_other_labs load_other_labs,
+ 40  	    a.review_study review_study,
+ 41  	    a.labtestname_is_oclabquest labtestname_is_oclabquest,
+ 42  	    a.find_event find_event,
+ 43  	    a.date_check_code date_check_code,
+ 44  	    a.off_study_dcm off_study_dcm,
+ 45  	    a.off_study_quest off_study_quest,
+ 46  	    a.off_study_offset_days off_study_offset_days,
+ 47  	    a.prestudy_lab_date_dcm prestudy_lab_date_dcm,
+ 48  	    a.prestudy_lab_date_quest prestudy_lab_date_quest,
+ 49  	    a.prestudy_offset_days prestudy_offset_days,
+ 50  	    a.blank_prestudy_use_enroll blank_prestudy_use_enroll,
+ 51  	    a.enrollment_date_dcm enrollment_date_dcm,
+ 52  	    a.enrollment_date_quest enrollment_date_quest,
+ 53  	    a.map_version,
+ 54  	    a.allow_mult_patients,
+ 55  	    a.use_qualify_value,
+ 56  	    a.oc_study based_on_study,
+ 57  	    c.clinical_study_id
+ 58    FROM clinical_studies c,
+ 59  	     nci_lab_load_ctl a
+ 60   WHERE a.oc_study = 'ALL'
+ 61  	AND NOT EXISTS (SELECT 'X'
+ 62  			  FROM nci_lab_load_ctl b
+ 63  			 WHERE b.oc_study = c.study
+ 64  			   AND b.oc_study <> 'ALL')
+ 65  /
+
+View created.
+
+SQL> 
+SQL> @NCI_STUDY_ALL_DCMS_EVENTS_VW.sql
+SQL> 
+SQL> CREATE OR REPLACE FORCE VIEW NCI_STUDY_ALL_DCMS_EVENTS_VW
+  2  (OC_STUDY, CLINICAL_STUDY_ID, DCM_NAME, SUBSET_NAME, QUESTION_NAME,
+  3   CPE_NAME, REPEAT_SN, OC_LAB_QUESTION, DISPLAY_SN)
+  4  AS
+  5  SELECT DISTINCT cs.study oc_study,      dm.clinical_study_id,
+  6  		     d.NAME dcm_name,	     d.subset_name,
+  7  		     dq.question_name,	     cpe.NAME cpe_name,
+  8  		     r.repeat_sn,	     r.default_value_text oc_lab_question,
+  9  		     dbp.display_sn
+ 10    FROM dcms d,
+ 11  	    dcm_questions dq,
+ 12  	    dcm_ques_repeat_defaults r,
+ 13  	    dci_modules dm,
+ 14  	    clinical_planned_events cpe,
+ 15  	    dci_book_pages dbp,
+ 16  	    dci_books db,
+ 17  	    clinical_studies cs
+ 18   WHERE dq.dcm_question_id = r.dcm_question_id(+)
+ 19  	AND dq.dcm_que_dcm_subset_sn = r.dcm_subset_sn(+)
+ 20  	AND dq.dcm_que_dcm_layout_sn = r.dcm_layout_sn(+)
+ 21  	AND d.dcm_id = dq.dcm_id
+ 22  	AND d.dcm_subset_sn = dq.dcm_que_dcm_subset_sn
+ 23  	AND d.dcm_layout_sn = dq.dcm_que_dcm_layout_sn
+ 24  	AND dm.dcm_id = d.dcm_id
+ 25  	AND dm.dcm_subset_sn = d.dcm_subset_sn
+ 26  	AND dm.dcm_layout_sn = d.dcm_layout_sn
+ 27  	AND dbp.dci_id = dm.dci_id
+ 28  	AND dbp.clin_plan_eve_id = cpe.clin_plan_eve_id
+ 29  	AND db.dci_book_id = dbp.dci_book_id
+ 30  	AND db.dci_book_status_code = 'A'
+ 31  	AND cs.clinical_study_id = dm.clinical_study_id
+ 32  /
+
+View created.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> @NCI_MANUAL_LOAD_BATCH_SEQ.sql
+SQL> 
+SQL> DROP SEQUENCE NCI_MANUAL_LOAD_BATCH_SEQ;
+
+Sequence dropped.
+
+SQL> 
+SQL> CREATE SEQUENCE NCI_MANUAL_LOAD_BATCH_SEQ
+  2    START WITH 1000
+  3    MAXVALUE 999999999999999999999999999
+  4    MINVALUE 0
+  5    NOCYCLE
+  6    NOCACHE
+  7    NOORDER;
+
+Sequence created.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> @NCI_MANUAL_LOAD_SEQ.sql
+SQL> 
+SQL> DROP SEQUENCE NCI_MANUAL_LOAD_SEQ;
+
+Sequence dropped.
+
+SQL> 
+SQL> CREATE SEQUENCE NCI_MANUAL_LOAD_SEQ
+  2    START WITH 1000
+  3    MAXVALUE 999999999999999999999999999
+  4    MINVALUE 1
+  5    NOCYCLE
+  6    NOCACHE
+  7    NOORDER;
+
+Sequence created.
+
+SQL> 
+SQL> 
+SQL> set verify off echo off
+
+Package created.
+
+No errors.
+
+Package body created.
+
+No errors.
+
+Procedure created.
+
+
+Procedure created.
+
+
+Package created.
+
+No errors.
+
+Package body created.
+
+No errors.
+
+Package created.
+
+No errors.
+
+Package body created.
+
+No errors.
+SQL> -- Data Changes Here
+SQL> 
+SQL> Update nci_lab_load_ctl
+  2  	set use_qualify_value = 'N'
+  3    where oc_study = 'ALL';
+
+2 rows updated.
+
+SQL> 
+SQL> commit;
+
+Commit complete.
+
+SQL> 
+SQL> Set Verify off Echo off

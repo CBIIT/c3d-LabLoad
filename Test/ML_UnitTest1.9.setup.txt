@@ -1,0 +1,22 @@
+REM -- PRC: Lab Loader AUTOLOADER Test Data 
+REM 
+REM -- Study Setup for ML_UnitTest1.9
+REM -- Study must allow for HOLD data manipulation, 
+REM -- but provide a manipulation script that will not parse or execute.
+
+Update NCI_LABS_MANUAL_LOAD_CTL 
+   set HOLD_DATA_CHANGES      = 'update nci_labs_manual_load_hold '||
+                                'set laboratttttory = ''CDW''     '||
+                                ' where BATCH_ID = #BATCH_ID#     ',  -- Bad Sql, invalid column
+       AUTO_CHANGE_HOLD_DATA  = 'Y',
+       AUTO_MOVE_TO_STAGE     = 'Y', 
+       AUTO_CHANGE_STAGE_DATA = 'N', 
+       AUTO_MOVE_TO_LOADER    = 'N', 
+       AUTO_LOAD_TO_OC        = 'N',    
+       MODIFY_USER            = USER,        
+       MODIFY_DATE            = SYSDATE,            
+       STAGE_DATA_CHANGES     = NULL
+where STUDY = '00_C_0030'; 
+
+COMMIT;
+

@@ -1,0 +1,183 @@
+Instructions for Installation Of Lab Loader Utility.
+
+ 1) Place all files of the installation into a single directory.
+ 2) If the Schema (or owner) of the Lab Loader Utility already exists, skip to step #14, 
+    otherwise continue with step #3.
+ 3) Schema Creation -
+    Start SQL*Plus using a DBA account in the enviroment targeted for installation.
+ 4) Once SQL*Plus is started, set your default directory by using the menu 
+    options "File / Open"
+    Select the directory where the installtion files are located (step 1).
+    Select the file "LabLoader_Schema.sql".
+    Select the "Open" button.
+ 5) The contents of "LabLoader_Schema.sql" will be brought into SQL*Plus.
+ 6) Press return or enter "." (period) and return to display a normal SQL*Plus 
+    prompt.
+ 7) Begin schema creation by typing the following at the SQL prompt:
+    @LabLoader_schema.sql
+ 
+ 8) You will be asked to enter NewUser and Password with the following prompts:
+    "Enter value for NewUser:"
+    "Enter value for Password:"
+ 9) Enter a userid (owner) for the Lab Loader Utility (i.e. LABLDR)
+10) Enter a password for the new userid.
+11) The script will execute
+12) Once the SQL prompt reappears, check the spool file LabLoader_schema.lst
+    for errors.
+13) Proceed to step #14.
+14) Check Log Utility -
+    Connect to SQL*Plus using the Userid and Password of the Lab Loader Owner.
+15) Once SQL*Plus is started, set your default directory by using the menu options
+    "File / Open"
+    Select the directory where the installtion files are located (step 1).
+    Select the file "check_log_util.sql"
+    Select the "Open" button.
+16) The contents of the "Check_Log_Util.sql" file will be brought into Sql*plus .
+17) Press return or type "." (period) and return to display a normal SQL*Plus prompt.
+18) Begin the check procedure by typing the following at the SQL prompt:
+    @check_log_util.sql
+
+19) The script will execute
+20) The check will conclude either that"LOG_UTIL exists!" or 
+    "LOG_UTIL does not exist and must be created!".  If "LOG_UTIL exists!" appears,
+    skip to set #24, otherwise continue with step #21.
+21) Log Utility Install -
+    The Message Log Utility must be created.  Begin by typing the following at the
+    SQL prompt:
+    @install_log_util.sql
+    
+    The script will execute
+22) Once the SQL prompt reappears, check the spool file install_log_util.lst
+    for errors.
+23) Proceed to step #24.
+24) Check UOM -
+    A check must be performed to ensure the the Unit of Measure reference table exists.
+    Begin the check procedure by typing the following at the SQL prompt:
+    @check_UOM_Ref.sql
+
+25) The script will execute
+26) The check will conclude either that"UOM Reference Table exists!" or 
+    "UOM Reference Table does not exist and must be created!".  
+    If "UOM Reference Table exists!" appears, skip to set #30, otherwise 
+    continue with step #27.
+27) UOM Reference Table Install -
+    The Unit of Measure Reference Table must be created.  Begin by typing the following at the
+    SQL prompt:
+    @install_UOM_Ref.sql
+    
+    The script will execute
+28) Once the SQL prompt reappears, check the spool file install_UOM_Ref.lst
+    for errors.  Two tables and one table trigger will be created.
+29) Proceed to step #30.
+30) Check FTP_DIR -
+    A check must be performed to ensure that the RAW FILE Data Directory exists.
+    Begin the check procedure by typing the following at the SQL prompt:
+    @check_FTP_DIR.sql
+
+31) The script will execute
+32) The check will conclude either that "LAB_FTP Directory exists!" or 
+    "LAB_FTP Directory does not exist and must be created!".  
+    If "LAB_FTP Directory exists!" appears, skip to set #38, otherwise 
+    continue with step #33.
+33) LAB_FTP Directory Install -
+    The RAW Data File Directory definition must be created.  This is a directory on the system where the 
+    Oracle Database Server is installed.  This must be done by an Oracle account 
+    having "create directory" privileges or by SYS.  Start SQL*Plus using an account having
+    the ability to create directories, the install the directory by typing the following 
+    at the SQL prompt:
+    @install_LabFtp_Dir.sql
+    
+34) You will be asked to enter Lab Directory with the following prompts:
+    "Enter value for Lab_Directory:"
+35) Enter the full path of the directory name used for RAW Lab Test Data i.e. (/tmp)
+36) The script will execute
+37) Once the SQL prompt reappears, check the spool file install_LabFtp_Dir.lst
+    for errors.
+38) Check LAB_DIR -
+    A check must be performed to ensure that the temporary output file directory exists.
+    Begin the check procedure by typing the following at the SQL prompt:
+    @check_LAB_DIR.sql
+
+39) The script will execute.
+40) The check will conclude either "LAB_DIR Directory exists!" or 
+    "LAB_DIR Directory does not exist and must be created!".  
+    If "LAB_DIR Directory exists!" appears, skip to set #50, otherwise 
+    continue with step #41.
+41) LAB_DIR Directory Install -
+    The Temporary Batch File Directory definition must be created.  This directory is used to
+    create and store the batch data load flat files used in batch data loading. This is a 
+    directory on the system where the Oracle Database Server is installed.  This must be done 
+    by an Oracle account having "create directory" privileges or by SYS.  Start SQL*Plus using 
+    an account having the ability to create directories, the install the directory by typing 
+    the following at the SQL prompt:
+    @install_LabDir_Dir.sql
+    
+42) You will be asked to enter Lab Directory with the following prompts:
+    "Enter value for Lab_Batch_directory:"
+43) Enter the full path of the directory name used for Temporary Batch Files (i.e. "/tmp")
+44) The script will execute
+45) Once the SQL prompt reappears, check the spool file install_LabFtp_Dir.lst
+    for errors.
+46) Connect to SQL*Plus using the Userid and Password of the Lab Loader Owner.
+47) Once SQL*Plus is started, set your default directory by using the menu options
+    "File / Open"
+    Select the directory where the installtion files are located (step 1).
+    Select the file "install_Lab_Loader.sql"
+    Select the "Open" button.
+48) The contents of the "install_Lab_Loader.sql" file will be brought into Sql*plus .  
+49) Proceed to step #50.
+50) Lab Loader Intall -
+    The installation of the Lab Loader Utility can now begin. Begin by typing the following 
+    at the SQL prompt:
+    @install_Lab_Loader.sql    
+51) You will be asked to enter the name of the tablespace for new objects with the 
+    following prompt:
+    "Enter value for Users_Tablespace:"
+
+52) Enter the name of the tablespace i.e. USERS
+
+    The script will execute
+53) Once the SQL prompt reappears, check the spool file install_Lab_Loader.lst
+    for errors.
+54) Lab Loader Public Synonyms - Remove
+    In order to ensure the proper definition of Public Synonyms for the Lab Load Utility,
+    any definitions previously defined must be removed.  Begin by typing the following 
+    at the SQL prompt:
+    @drop_LabLoad_public_synonyms.sql
+
+    The script will execute
+55) Once the SQL prompt reappears, check the spool file drop_LabLoad_public_synonyms.lst
+    for errors.
+56) Lab Loader Public Synonyms - Create
+    Create the Public Synonyms for Lab Loader Utility.  Begin by typing the following 
+    at the SQL prompt:
+    @create_LabLoad_public_synonyms.sql
+
+57) You will be asked to enter the names of the schemas that own Lab Loader, Log Utility and UOM Tables with
+    the following prompts:
+    "Enter value for LabLoadOwner:"
+    "Enter value for Log_Util_Owner:"
+    "Enter value for UOM_Table_Owner:"
+
+58) Enter the name of the Lab Loader Owner i.e. LABLDR
+59) Enter the name of the Log Utility Owner i.e. LABLDR or CTDEV
+60) Enter the name of the UOM Table Owner i.e. LABLDR or CTDEV
+
+61) Once the SQL prompt reappears, check the spool file create_LabLoad_public_synonyms.lst
+    for errors.
+
+62) Done.
+
+
+* * * * * * *
+* N O T E S *
+* * * * * * *
+
+1) The schema Owner of the Lab Loader Utility must have a valid Oracle Clinical Account.
+
+2) If installation is into a new Schema, the previous version of Lab Loader will no longer 
+   function properly, as the Public Synonyms will be redirected.
+
+
+
+

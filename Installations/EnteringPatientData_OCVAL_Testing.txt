@@ -1,0 +1,41 @@
+
+ENTERING A PATIENT'S DATA
+1) Use remote app server to launch IE 6
+	http://remoteaccess.nci.nih.gov/
+2)  Once launched use the following URL to get to RDC 
+	http://octrials-dev2.nci.nih.gov/opa45/rdclaunch.htm
+3) login as OPS$LABLDR using OCVAL as database.
+4) CHange to classic view mode;  Menu - Edit/Preferences - General tabl; choose Classic
+ 
+For a new record, enter visit date, Date form which to include labs, Registering Institution and Local Patient ID (or what ever the test case states)
+5) Save the data.
+6) To get back to Patient List choose the "Activity List" button
+SHOWING LAB DATA
+1)  Use remote app server to launch IE 6
+	http://remoteaccess.nci.nih.gov/
+2)  Once launched use the following URL to get to RDC 
+	http://octrials-dev2.nci.nih.gov/opa45/rdclaunch.htm
+3)  Login as OPS$LABLDR using OCVAL as database.
+4) Change to classic view mode;  Menu - Edit/Preferences - General tabl; choose Classic
+5) Select from the list of patient, if patient list not visible, expand the Site A from Activity List Tree
+6) Highlight the patient; select the Show All Data for patient 101 link
+7) Select the tab related to the Lab DCI EVENT.
+COPYING FILES FOR RAW DATA
+Instructions for Data File Setup for Lab Loader v1.0.4
+1) Log into Middle Tier machine:
+	cbiodb5.nci.nih.gov
+2) Use the userid "bdl".
+3) Change directory to /share/ocdata/CDWDATA/VALDATA
+4) The files needed will already exist in the directory.
+5) Copy the required file to the filename "NCIC3D_cdr.vw_lab_results_current_test.txt"  ie:
+	cp MPI999101_1.txt NCIC3D_cdr.vw_lab_results_current_test.txt
+6) Do not rename or delete the validation files
+GETTING Message Log Data
+1) Using TOAD, log in as OPS$LABLDR
+2) Identify the most recent logname:
+select distinct logname from message_logs where logtype = 'LABLOAD';
+3) Use the most recent log name and get the data:
+select * from message_logs where logname = 'LABLOAD_20100929-1436';
+4) Use TOAD's export option to place data inst Excell spreadsheet.
+
+

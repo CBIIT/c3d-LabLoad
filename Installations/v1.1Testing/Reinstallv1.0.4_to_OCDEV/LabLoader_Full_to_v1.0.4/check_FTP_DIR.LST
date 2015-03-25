@@ -1,0 +1,27 @@
+SQL> 
+SQL> -- This script will check for the reference the directory LAB_FTP. This directory is used as
+SQL> -- the location for FLAT RAW ASCII Lab Test data files.  If the directory exists,
+SQL> -- the message "LAB_FTP Directory exists!" will appear.  If the directory does not exist,
+SQL> -- the message "LAB_FTP Directory does not exist and must be created!" will appear.
+SQL> 
+SQL> select 'LAB_FTP Directory does not exist and must be created!' "Check"
+  2    from dual
+  3   where not exists (
+  4  	    select OWNER, DIRECTORY_NAME, DIRECTORY_PATH
+  5  	      from all_directories
+  6  	     where directory_name ='LAB_FTP')
+  7  UNION
+  8  select 'LAB_FTP Directory exists!' "Check"
+  9    from dual
+ 10   where exists (
+ 11  	    select OWNER, DIRECTORY_NAME, DIRECTORY_PATH
+ 12  	      from all_directories
+ 13  	     where directory_name ='LAB_FTP')
+ 14  /
+
+Check                                                                           
+-----------------------------------------------------                           
+LAB_FTP Directory exists!                                                       
+
+SQL> 
+SQL> spool off

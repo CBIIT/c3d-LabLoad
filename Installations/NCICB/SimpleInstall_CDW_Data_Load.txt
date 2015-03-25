@@ -1,0 +1,114 @@
+Instructions for Installation for CDW Data Loader.
+
+ 1) Place all files of the installation in a single directory.
+ 2) Start SQL*Plus using a DBA account in the environment targeted for installation
+ 3) If the Schema (or owner) of this utility already exists, skip to step #14, 
+    otherwise continue with step 4
+ 4) Schema Creation -
+    Once SQL*Plus is started, set your default directory by using the menu 
+    options "File / Open"
+    Select the directory where the installation files are located (step 1).
+    Select the file "CDWDataLoader_Schema.sql".
+    Select the "Open" button.
+ 5) The contents of "CDWDataLoader_Schema.sql" will be brought into Sql*plus
+ 6) Press return or enter "." (period) and return to display a normal SQL*Plus 
+    prompt.
+ 7) Begin schema creation by typing the following at the SQL prompt:
+    @CDWDataLoader_schema.sql
+ 
+ 8) You will be asked to enter NewUser and Password with the following prompts:
+    "Enter value for NewUser:"
+    "Enter value for Password:"
+ 9) Enter a userid for the CDW Data Loader Utility. (i.e. DATALDR)
+10) Enter a password for the new userid. 
+11) The script will execute
+12) Once the SQL prompt reappears, check the spool file CDWDataLoader_schema.lst
+    for errors.
+13) Proceed to step #14.
+14) Connect to SQL*Plus using the Userid and Password of the CDW Data Loader Owner.
+15) Once SQL*Plus is started, set your default directory by using the menu options
+    "File / Open"
+    Select the directory where the installation files are located (step 1).
+    Select the file "check_log_util.sql"
+    Select the "Open" button.
+16) The contents of the "Check_Log_Util.sql" file will be brought into SQL*Plus.
+17) Press return or type "." (period) and return to display a normal SQL*Plus prompt.
+18) Begin the check procedure by typing the following at the SQL prompt:
+    @check_log_util.sql
+
+19) The script will execute
+20) The check will conclude either "LOG_UTIL exists!" or 
+    "LOG_UTIL does not exist and must be created!".  If "LOG_UTIL exists!" appears,
+    skip to set #24, otherwise continue with step #21.
+21) LOG_UTIL -
+    The Message Log Utility must be created.  This Utility is used by the CDW Data
+    Loader to record messages during each execution of the loader.
+    Begin by typing the following at the SQL prompt:
+    @install_log_util.sql
+
+22) You will be asked to enter the name of the tablespace for new objects with the 
+    following prompt:
+    "Enter value for Users_Tablespace:"
+    
+23) The script will execute
+24) Once the SQL prompt reappears, check the spool file install_log_util.lst
+    for errors.
+25) Proceed to step #26.
+26) Check FTP_DIR -
+    A check must be performed to ensure that the RAW FILE Data Directory exists.
+    Begin the check procedure by typing the following at the SQL prompt:
+    @check_FTP_DIR.sql
+
+27) The script will execute
+28) The check will conclude either that "LAB_FTP Directory exists!" or 
+    "LAB_FTP Directory does not exist and must be created!".  
+    If "LAB_FTP Directory exists!" appears, skip to set #35, otherwise 
+    continue with step #29.
+29) LAB_FTP Directory -
+    The RAW Data File Directory definition must be created.  This is a directory on the system where the 
+     Oracle Database Server is installed.  This must be done by an Oracle account 
+    having "create directory" privileges or by SYS.  Start SQL*Plus using an account having
+    the ability to create directories, the install the directory by typing the following 
+    at the SQL prompt:
+    @install_LabFtp_Dir.sql
+    
+30) You will be asked to enter the Lab Directory with the following prompts:
+    "Enter value for Lab_Directory:"
+31) Enter the full path of the directory name used for RAW Lab Test Data i.e. (/tmp)
+32) The script will execute.
+33) Once the SQL prompt reappears, check the spool file install_LabFtp_Dir.lst
+    for errors.
+
+34) Connect to SQL*Plus using the Userid and Password of the CDW Data Loader Owner.
+35) Once SQL*Plus is started, set your default directory by using the menu options
+    "File / Open"
+    Select the directory where the installation files are located (step 1).
+    Select the file "install_CDW_Data_Loader.sql"
+    Select the "Open" button.
+36) The contents of the "install_CDW_Data_Loader.sql" file will be brought into Sql*plus .  
+37) Proceed to step #38.
+38) CDW Data Load Install -
+    The installation of the CDW Data Loader Utility can now occur.  Begin by typing the following 
+    at the SQL prompt:
+    @install_CDW_Data_Loader.sql    
+
+39) You will be asked to enter the name of the tablespace for new objects with the 
+    following prompt:
+    "Enter value for Users_Tablespace:"
+
+40) Enter the name of the tablespace (i.e. USERS)
+
+42) The script will execute.
+43) Once the SQL prompt reappears, check the spool file install_CDW_Data_Loader.lst
+    for errors.
+
+44) Done.
+
+
+* * * * * * *
+* N O T E S *
+* * * * * * *
+
+1) If installation is into a new Schema, the previous version of CDW Data Loader should be removed.  Also note, that
+   any data held within the Historical Result table, should be copied to the new Historical Results table, as the feed
+   for this data is incremental.

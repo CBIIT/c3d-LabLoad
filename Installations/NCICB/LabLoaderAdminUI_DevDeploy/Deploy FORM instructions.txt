@@ -1,0 +1,81 @@
+Deplyoment of Lab Loader Administrator Interface to OCPROD (Production)
+
+
+The Lab Loader Administrator Interface (LLI) deployment consists of both an Oracle Forms web
+configuration and Oralce RDBMS alterations.
+
+General:
+1) Copy all files of the deployment to a single location.  This location will also be 
+   used when applying the Database changes.
+
+
+
+Web Deployment:
+
+At the NCICB, we have created a directory on the Middle Tier Web Server 
+(the same machine where RDC and OPA are deplyed) that holds C3D Utilities and Applications.
+This directory is name "ncioraapps" (i.e. D:\ncioraapps).  A subdirectory "html" was also 
+created, to hold Utility specific launch web pages. (i.e. D:\ncioraapps\html).
+
+Using this set up mentioned above, the following step can be used to deploy the Lab Loader
+Interface C3D Utility as a Web App.
+
+1) The web form for the Lab Load Interface form will need to be copied to both the 
+   application install direction as well as the application execution directory
+
+	Copy the file:
+
+	"LabLoaderUI.htm" 
+
+	to locations:
+
+	D:\opapps45\html
+	D:\ncioraapps\html
+
+*Note: D:\opapps45\html is the location for the Oracle Clinical Launch pages.
+
+2) The LLI form and its menu will need deployed to the C3D Application directory.
+
+ 	Copy the files:
+
+	LabLoaderUI.fmx
+	LabLoaderUI.fmb
+
+	to:
+
+	D:\ncioraapps
+
+3) The LLI Web Form configuration definition will need added to the WebForm 
+   Configuration File.
+
+	Append the text using "cut and paste" from:
+	
+	Formsweb_cfg_LLI.TXT
+
+	to the bottom of:
+
+	D:\ORACLE\806\FORMS60\server\formsweb.cfg
+
+
+	Copy the file "Formsweb_cfg_LLI.TXT" to D:\ncioraapps for safe keeping.
+
+*Note: This assumes that the Oracle products were installed on the "D" drive in the root 
+directory "ORACLE".
+
+
+4) The Service "OracleiSuitesHTTPServer" will need to be restarted, to ensure that the
+   LLI application is available.
+
+
+5) Once completed, the URL should be similar to:
+
+   http://middle_tier_name/opa45/LabLoadUI.htm
+
+   *Note: middle_tier_name should be the same as that used by the URL for RDC or OPA.
+
+6) Congratulations, you are DONE!
+
+
+
+
+

@@ -1,0 +1,362 @@
+
+Install Date         Install User                                               
+-------------------- ------------------------------                             
+09-APR-2013 16:37:27 OPS$BDL                                                    
+
+SQL> 
+SQL> @nci_lab_mapping_alts.sql
+SQL> 
+SQL> alter table NCI_LAB_MAPPING
+  2  add MAP_VERSION	    VARCHAR2(10);
+add MAP_VERSION        VARCHAR2(10)
+    *
+ERROR at line 2:
+ORA-01430: column being added already exists in table 
+
+
+SQL> 
+SQL> COMMENT ON COLUMN NCI_LAB_MAPPING.MAP_VERSION IS 'Version of Map';
+
+Comment created.
+
+SQL> 
+SQL> @nci_lab_load_ctl_alts.sql
+SQL> 
+SQL> alter table NCI_LAB_LOAD_CTL
+  2  	add  MAP_VERSION		VARCHAR2(10);
+   add  MAP_VERSION                VARCHAR2(10)
+        *
+ERROR at line 2:
+ORA-01430: column being added already exists in table 
+
+
+SQL> 
+SQL> alter table NCI_LAB_LOAD_CTL
+  2  	add  ALLOW_MULT_PATIENTS	VARCHAR2(1);
+   add  ALLOW_MULT_PATIENTS        VARCHAR2(1)
+        *
+ERROR at line 2:
+ORA-01430: column being added already exists in table 
+
+
+SQL> 
+SQL> alter table NCI_LAB_LOAD_CTL
+  2  	add  FIND_EVENT 		VARCHAR2(1);
+   add  FIND_EVENT                 VARCHAR2(1)
+        *
+ERROR at line 2:
+ORA-01430: column being added already exists in table 
+
+
+SQL> 
+SQL> COMMENT ON COLUMN NCI_LAB_LOAD_CTL.ALLOW_MULT_PATIENTS IS
+  2  	   '"Y" allows patients to be on study more than once; "N" does not.';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN NCI_LAB_LOAD_CTL.MAP_VERSION IS
+  2  	   'Version of Lab Mapping Map to use when identifying OC Lab Questions';
+
+Comment created.
+
+SQL> 
+SQL> COMMENT ON COLUMN NCI_LAB_LOAD_CTL.FIND_EVENT IS
+  2  	   '"Y"=Find Event from OC; "N"=Use Event as Given.'
+  3  
+SQL> @nci_lab_valid_patients_vw.vw
+SQL> 
+SQL> CREATE OR REPLACE FORCE VIEW NCI_LAB_VALID_PATIENTS_VW
+  2  (PT_ID, PT, STUDY, NCI_INST_CD)
+  3  AS
+  4  SELECT REPLACE (pt_id_ful, '-') pt_id, oc_patient_pos pt, oc_study,
+  5  	       nci_inst_cd_ful nci_inst_cd
+  6  	  FROM nci_study_patient_ids a
+  7  	 WHERE pt_id_ful IS NOT NULL
+  8  	   AND (   (nci_inst_cd_ful LIKE '%NCI%' ) --or nci_inst_cd_ful IN ('GTOWN') )
+  9  		OR (nci_inst_cd_ful = 'NIHCC'
+ 10  		    AND oc_study IN ('97_C_0110', '99_C_0023', '00_C_0030')
+ 11  		   )
+ 12  	  OR exists (select 'x' from NCI_STUDY_PATIENT_IDS_CTL b
+ 13  		      where b.OC_STUDY = a.oc_study
+ 14  			and b.NCI_INST_CD_CONST is not null
+ 15  			and b.NCI_INST_CD_CONST = a.nci_inst_cd_ful)
+ 16  	       )
+ 17  	   AND DECODE
+ 18  		  (INSTR
+ 19  		      (TRANSLATE
+ 20  			  (pt_id_ful,
+ 21  			   './ abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+ 22  			   'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+ 23  			  ),
+ 24  		       'X'
+ 25  		      ),
+ 26  		   0, 'number',
+ 27  		   'not_number'
+ 28  		  ) = 'number';
+
+View created.
+
+SQL> 
+SQL> 
+SQL> CREATE PUBLIC SYNONYM NCI_LAB_VALID_PATIENTS_VW FOR NCI_LAB_VALID_PATIENTS_VW;
+CREATE PUBLIC SYNONYM NCI_LAB_VALID_PATIENTS_VW FOR NCI_LAB_VALID_PATIENTS_VW
+                      *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_LAB_VALID_PATIENTS_VW TO LABLOADER;
+
+Grant succeeded.
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_LAB_VALID_PATIENTS_VW TO LABLOADER_ADMIN;
+
+Grant succeeded.
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_LAB_VALID_PATIENTS_VW TO LABLOADER_REVIEW;
+
+Grant succeeded.
+
+SQL> 
+SQL> 
+SQL> @nci_lab_dup_patients_vw.vw
+SQL> 
+SQL> CREATE OR REPLACE FORCE VIEW NCI_LAB_DUP_PATIENTS_VW
+  2  (PT_ID, PT, OC_STUDY, NCI_INST_CD)
+  3  AS
+  4  SELECT REPLACE (pt_id_ful, '-') pt_id, oc_patient_pos pt, oc_study,
+  5  	       nci_inst_cd_ful nci_inst_cd
+  6  	  FROM nci_study_patient_ids a
+  7  	 WHERE exists (
+  8  		     SELECT   pt_id_ful
+  9  			 FROM nci_study_patient_ids t
+ 10  			WHERE t.oc_study = a.oc_study
+ 11  			      and replace(t.pt_id_ful,'-') = replace(a.pt_id_ful,'-')
+ 12  		     GROUP BY replace(t.pt_id_ful,'-')
+ 13  		       HAVING COUNT (*) > 1);
+
+View created.
+
+SQL> 
+SQL> CREATE PUBLIC SYNONYM NCI_LAB_DUP_PATIENTS_VW FOR NCI_LAB_DUP_PATIENTS_VW;
+
+Synonym created.
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_LAB_DUP_PATIENTS_VW TO LABLOADER;
+
+Grant succeeded.
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_LAB_DUP_PATIENTS_VW TO LABLOADER_ADMIN;
+
+Grant succeeded.
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_LAB_DUP_PATIENTS_VW TO LABLOADER_REVIEW;
+
+Grant succeeded.
+
+SQL> 
+SQL> 
+SQL> @nci_lab_load_study_ctls_vw.vw
+SQL> 
+SQL> CREATE OR REPLACE FORCE VIEW NCI_LAB_LOAD_STUDY_CTLS_VW
+  2  (OC_STUDY, STOP_LAB_LOAD_FLAG, LABORATORY, LOAD_OTHER_LABS, REVIEW_STUDY,
+  3   LABTESTNAME_IS_OCLABQUEST, FIND_EVENT, DATE_CHECK_CODE, OFF_STUDY_DCM, OFF_STUDY_QUEST,
+  4   OFF_STUDY_OFFSET_DAYS, PRESTUDY_LAB_DATE_DCM, PRESTUDY_LAB_DATE_QUEST, PRESTUDY_OFFSET_DAYS, BLANK_PRESTUDY_USE_ENROLL,
+  5   ENROLLMENT_DATE_DCM, ENROLLMENT_DATE_QUEST, MAP_VERSION, ALLOW_MULT_PATIENTS, BASED_ON_STUDY,
+  6   CLINICAL_STUDY_ID)
+  7  AS
+  8  SELECT a.oc_study,
+  9  	    NVL (TRIM (a.stop_lab_load_flag), b.stop_lab_load_flag) stop_lab_load_flag,
+ 10  	    NVL (TRIM (a.laboratory), b.laboratory) laboratory,
+ 11  	    NVL (TRIM (a.load_other_labs), b.load_other_labs) load_other_labs,
+ 12  	    NVL (TRIM (a.review_study), b.review_study) review_study,
+ 13  	    NVL (TRIM (a.labtestname_is_oclabquest), b.labtestname_is_oclabquest) labtestname_is_oclabquest,
+ 14  	    NVL (TRIM (a.find_event), b.find_event) find_event,
+ 15  	    NVL (TRIM (a.date_check_code), b.date_check_code) date_check_code,
+ 16  	    NVL (TRIM (a.off_study_dcm), b.off_study_dcm) off_study_dcm,
+ 17  	    NVL (TRIM (a.off_study_quest), b.off_study_quest) off_study_quest,
+ 18  	    NVL (a.off_study_offset_days, b.off_study_offset_days) off_study_offset_days,
+ 19  	    NVL (TRIM (a.prestudy_lab_date_dcm), b.prestudy_lab_date_dcm) prestudy_lab_date_dcm,
+ 20  	    NVL (TRIM (a.prestudy_lab_date_quest), b.prestudy_lab_date_quest) prestudy_lab_date_quest,
+ 21  	    NVL (a.prestudy_offset_days, b.prestudy_offset_days) prestudy_offset_days,
+ 22  	    NVL (TRIM (a.blank_prestudy_use_enroll), b.blank_prestudy_use_enroll) blank_prestudy_use_enroll,
+ 23  	    NVL (TRIM (a.enrollment_date_dcm), b.enrollment_date_dcm) enrollment_date_dcm,
+ 24  	    NVL (TRIM (a.enrollment_date_quest), b.enrollment_date_quest) enrollment_date_quest,
+ 25  	    NVL (TRIM (a.map_version), b.map_version) map_version,
+ 26  	    NVL (TRIM (a.allow_mult_patients), b.allow_mult_patients) allow_mult_patients,
+ 27  	    a.oc_study based_on_study,
+ 28  	    c.clinical_study_id
+ 29    FROM clinical_studies c,
+ 30  	    nci_lab_load_ctl a,
+ 31  	    nci_lab_load_ctl b
+ 32   WHERE c.study = a.oc_study
+ 33  	AND b.oc_study = 'ALL'
+ 34  UNION
+ 35  SELECT c.study,
+ 36  	    a.stop_lab_load_flag stop_lab_load_flag,
+ 37  	    a.laboratory laboratory,
+ 38  	    a.load_other_labs load_other_labs,
+ 39  	    a.review_study review_study,
+ 40  	    a.labtestname_is_oclabquest labtestname_is_oclabquest,
+ 41  	    a.find_event find_event,
+ 42  	    a.date_check_code date_check_code,
+ 43  	    a.off_study_dcm off_study_dcm,
+ 44  	    a.off_study_quest off_study_quest,
+ 45  	    a.off_study_offset_days off_study_offset_days,
+ 46  	    a.prestudy_lab_date_dcm prestudy_lab_date_dcm,
+ 47  	    a.prestudy_lab_date_quest prestudy_lab_date_quest,
+ 48  	    a.prestudy_offset_days prestudy_offset_days,
+ 49  	    a.blank_prestudy_use_enroll blank_prestudy_use_enroll,
+ 50  	    a.enrollment_date_dcm enrollment_date_dcm,
+ 51  	    a.enrollment_date_quest enrollment_date_quest,
+ 52  	    a.map_version,
+ 53  	    a.allow_mult_patients,
+ 54  	    a.oc_study based_on_study,
+ 55  	    c.clinical_study_id
+ 56    FROM clinical_studies c, nci_lab_load_ctl a
+ 57   WHERE a.oc_study = 'ALL'
+ 58  	AND NOT EXISTS (SELECT 'X'
+ 59  			  FROM nci_lab_load_ctl b
+ 60  			 WHERE b.oc_study = c.study AND b.oc_study <> 'ALL');
+
+View created.
+
+SQL> 
+SQL> 
+SQL> CREATE PUBLIC SYNONYM NCI_LAB_LOAD_STUDY_CTLS_VW FOR NCI_LAB_LOAD_STUDY_CTLS_VW;
+CREATE PUBLIC SYNONYM NCI_LAB_LOAD_STUDY_CTLS_VW FOR NCI_LAB_LOAD_STUDY_CTLS_VW
+                      *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> 
+SQL> 
+SQL> GRANT SELECT ON  NCI_LAB_LOAD_STUDY_CTLS_VW TO LABLOADER;
+
+Grant succeeded.
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_LAB_LOAD_STUDY_CTLS_VW TO LABLOADER_ADMIN;
+
+Grant succeeded.
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_LAB_LOAD_STUDY_CTLS_VW TO LABLOADER_REVIEW;
+
+Grant succeeded.
+
+SQL> 
+SQL> 
+SQL> @nci_cdw_lab_map_crossref.vw
+SQL> 
+SQL> CREATE OR REPLACE FORCE VIEW NCI_CDW_LAB_MAP_CROSSREF
+  2  (TEST_ID, EC_ID, OTH_TEST_ID, LABORATORY, OC_LAB_QUESTION,
+  3   MAP_VERSION)
+  4  AS
+  5  SELECT TO_CHAR (a.test_id) test_id, a.ec_id ec_id, b.test_id oth_test_id,
+  6  	    c.laboratory, c.oc_lab_question, c.map_version
+  7    FROM mis_cdr_tests a,
+  8  	    mis_cdr_tests b,
+  9  		nci_lab_mapping c
+ 10   WHERE a.ec_id = b.ec_id
+ 11  	AND b.test_id = c.test_component_id;
+
+View created.
+
+SQL> 
+SQL> 
+SQL> CREATE PUBLIC SYNONYM NCI_CDW_LAB_MAP_CROSSREF FOR NCI_CDW_LAB_MAP_CROSSREF;
+CREATE PUBLIC SYNONYM NCI_CDW_LAB_MAP_CROSSREF FOR NCI_CDW_LAB_MAP_CROSSREF
+                      *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> 
+SQL> 
+SQL> GRANT SELECT ON  NCI_CDW_LAB_MAP_CROSSREF TO LABLOADER;
+
+Grant succeeded.
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_CDW_LAB_MAP_CROSSREF TO LABLOADER_ADMIN;
+
+Grant succeeded.
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_CDW_LAB_MAP_CROSSREF TO LABLOADER_REVIEW;
+
+Grant succeeded.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> set verify off echo off
+
+Warning: Procedure created with compilation errors.
+
+
+Warning: Procedure created with compilation errors.
+
+
+Package created.
+
+No errors.
+
+Warning: Package Body created with compilation errors.
+
+Errors for PACKAGE BODY CDW_DATA_TRANSFER_V3:
+
+LINE/COL ERROR                                                                  
+-------- -----------------------------------------------------------------      
+1093/22  PL/SQL: SQL Statement ignored                                          
+1107/29  PL/SQL: ORA-00904: "C"."CLINICAL_STUDY_ID": invalid identifier         
+1377/22  PL/SQL: SQL Statement ignored                                          
+1391/29  PL/SQL: ORA-00904: "C"."CLINICAL_STUDY_ID": invalid identifier         
+2357/16  PLS-00905: object OPS$BDL.LOAD_LAB_RESULTS_UPD is invalid              
+2357/16  PL/SQL: Statement ignored                                              
+2381/16  PLS-00905: object OPS$BDL.LOAD_LAB_RESULTS is invalid                  
+2381/16  PL/SQL: Statement ignored                                              
+2402/16  PLS-00905: object OPS$BDL.LOAD_LAB_RESULTS is invalid                  
+2402/16  PL/SQL: Statement ignored                                              
+2455/18  PLS-00905: object OPS$BDL.LOAD_LAB_RESULTS_UPD is invalid              
+
+LINE/COL ERROR                                                                  
+-------- -----------------------------------------------------------------      
+2455/18  PL/SQL: Statement ignored                                              
+3813/19  PL/SQL: SQL Statement ignored                                          
+3814/27  PL/SQL: ORA-00904: "USE_QUALIFY_VALUE": invalid identifier             
+3819/11  PL/SQL: SQL Statement ignored                                          
+3821/29  PLS-00364: loop index variable 'CR1' use is invalid                    
+3821/29  PL/SQL: ORA-00904: "CR1"."OC_STUDY": invalid identifier                
+3849/11  PL/SQL: Statement ignored                                              
+3849/128 PLS-00364: loop index variable 'CR1' use is invalid                    
+SQL> -- Data Changes Here
+SQL> 
+SQL> Update nci_lab_load_ctl
+  2  	set allow_mult_patients = 'N', map_version = '1.0'
+  3    where oc_study = 'ALL';
+
+2 rows updated.
+
+SQL> 
+SQL> update nci_lab_mapping
+  2  	set map_version = '1.0';
+
+2588 rows updated.
+
+SQL> 
+SQL> commit;
+
+Commit complete.
+
+SQL> 
+SQL> Set Verify off Echo off

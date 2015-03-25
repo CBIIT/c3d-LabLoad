@@ -1,0 +1,8 @@
+CREATE TABLE BTRIS_PROTOCOL_PATIENT
+(
+  BTRIS_STUDY  VARCHAR2(30 BYTE)                NOT NULL,
+  MRN          VARCHAR2(30 BYTE)                NOT NULL
+)
+/
+
+

@@ -1,0 +1,38 @@
+TO DO
+1) Check DEV for v1.0.4
+2) If not found, install the thing
+3) Run the LARGE INSERT and UPDATES through OCDEV
+4) Record Log Files to FILE.
+5) Install v1.1 on OCDEV
+6) Run the LARGE INSERT and UPDATES through OCDEV
+7) Record Log Files to FILE.
+8) Build Matrix
+
+Performed:
+1) Check installation scripts for baseline and v2 - v4.
+2) Created Uninstall Script based upon findings.
+3) Added Drop statements for known items that need recreated.
+4) executed new uninstall script
+5) Followed SimpleInstall_Lab_Loader Instructs
+	Did the following steps:
+	1,2,14-20,24-26,30-32,38-40
+6) Step 50 - 53 required special care (executes Base Lab Loader Script install_lab_loader.sql)
+	"USERS" was used as the Users_Tablespace.
+7) Reviewed out file insta_lab_loader.lst.
+8) proceeded to step 53a - 53b.
+	Reviewed install_labloader_102.lst
+	Reviewed install_labloader_103.lst
+	Reviewed install_labloader_104.lst
+9) Do NOT execute steps 54-60.  Public synonyms fine.
+10) Dropped submit_psub_load from ops$bdl as it is an RXC owned object.
+	 drop procedure ops$bdl.submit_psub_load;
+11) Compiled procedures/packaged requiring compiling
+12) Removed extract "ALL" and "LAB_LOADER" records from NCI_LAB_LOAD_CTL and NCI_STUDY_PATIENT_IDS_CTL tables
+13) Deleted duplicate data from NCI_LAB_MAPPING table.
+14) Deleted duplicate data from NCI_UOM_MAPPING table.
+
+
+         
+
+
+

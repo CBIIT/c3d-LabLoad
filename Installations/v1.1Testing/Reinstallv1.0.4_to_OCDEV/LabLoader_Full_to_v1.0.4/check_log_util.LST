@@ -1,0 +1,29 @@
+SQL> 
+SQL> -- This script will check for the Utility	LOG_UTIL.  If the utility exists,
+SQL> -- the message "LOG_UTIL exists!" will appear.  If the utility does not exist,
+SQL> -- the message "LOG_UTIL does not exist and must be created!" will appear.
+SQL> 
+SQL> select 'LOG_UTIL does not exist and must be created!' "Check"
+  2    from dual
+  3   where not exists (
+  4  	    select owner, synonym_name, table_name
+  5  	      from all_synonyms
+  6  	     where synonym_name ='LOG_UTIL'
+  7  	       and owner = 'PUBLIC')
+  8  UNION
+  9  select 'LOG_UTIL exists!' "Check"
+ 10    from dual
+ 11   where exists (
+ 12  	    select owner, synonym_name, table_name
+ 13  	      from all_synonyms
+ 14  	     where synonym_name ='LOG_UTIL'
+ 15  	       and owner = 'PUBLIC')
+ 16  
+SQL> /
+
+Check                                                                           
+--------------------------------------------                                    
+LOG_UTIL exists!                                                                
+
+SQL> 
+SQL> spool off

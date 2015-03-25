@@ -1,0 +1,83 @@
+Instructions for uninstall and Install of Lab Loader v1.0.4
+
+
+INSTANCE INFORMATION
+
+Database Instance:	OCVAL (cbiodb2.nci.nih.gov:1521/OCVAL)
+
+Lab Loader Schema:	OPS$LABLDR
+Lab Looder Password:	********
+
+Uninstall Script SVN URL:	https://ncisvn.nci.nih.gov/svn/c3dtools/trunk/LabLoad/Installations/UNINSTALL_LabLoaderv1.0.4_For_ReInstall.sql
+
+Lab Loader v1.0.4 Zip SVN URL:	https://ncisvn.nci.nih.gov/svn/c3dtools/trunk/LabLoad/Installations/LabLoader_Full_to_v1.0.4.zip
+
+Post-Install Script SVN URL:	https://ncisvn.nci.nih.gov/svn/c3dtools/trunk/LabLoad/Installations/REMOVE_UNWANTED_OBJECTS_AfterReInstallv1.0.4.sql
+
+
+UNINSTALL / REINSTALL INSTRUCTIONS:
+
+1) Download the 3 files mentioned about to a single directory
+2) Unzip the v1.0.4 zip file
+3) Rename the file UNINSTALL_LabLoaderv1.0.4_For_ReInstall.sql to UNINSTALL.sql
+4) Rename the file REMOVE_UNWANTED_OBJECTS_AfterReInstallv1.0.4.sql to REMOVER.sql
+5) Log in to SQL*Plus as the Lab Loader Schema owner and execute the UNINSTALL script.
+	@UNINSTALL.sql
+6) Review the output file UNINSTALL_Lab_Loader.lst for errors.
+7) Locate the file SimpleInstall_Lab_Loader.txt and follow the directions in it to install Lab Loader
+   NOTE: See Acceptable Errors section below
+8) Once the installation of Lab Loader is complete, log in to SQL*Plus as the Lab Loader Schema owner 
+   and execute the REMOVER script.
+	@REMOVER.sql
+9) Done.
+
+
+ACCEPTABLE ERRORS
+When executing the SimpleInstall_Lab_Loader.txt instructions, several sections are skipped because
+many objects required are already installed and were not removed by the UNINSTALL script
+
+The actual Lab Loader is installed starting at step 50.  Below are errors that will be encounter during 
+the installation that may be ignored.
+
+At Step 50 the install_Lab_Loader script is executed.  The following errors can be ignored:
+ 1) Errors about already existing sequences
+ 2) Drop Table errors for objects that do not exist
+ 3) Compile Error for TRIGGER BI_ER_MLT
+ 4) Public Synonym already exists errors
+ 5) Insufficient privilege error for object LabTest.
+ 6) Errors with view NCI_CDE_LAB_MAP_CROSSREF
+ 7) Errors with view NCI_LAB_VALID_PT_DATES_VW
+ 8) Compile Errors with procedure SUBMIT_PSUB_LOAD
+ 9) Compile Errors with package AUTOMATE_BDL
+10) Compile Errors with package CDW_DATA_TRANSFER_V3
+
+These errors can be ignored because they rely on the entire install to be completed
+
+At Step 53a, executing the script Install_1.0.2.sql will have the following errors that can be ignored:
+ 1) Public Synonym already exists for view NCI_LAB_VALID_PATIENTS_VW
+ 2) Compile Errors with package CDW_DATA_TRANSFER_V3
+
+These errors can be ignored because they rely on the entire install to be completed
+
+At Step 53a, executing the script Install_1.0.3.sql will have the following errors that can be ignored:
+ 1) Public Synonym already exists for view NCI_LAB_VALID_PATIENTS_VW
+ 2) Public Synonym already exists for view NCI_LAB_DUP_PATIENTS_VW
+ 3) Public Synonym already exists for view NCI_LAB_LOAD_STUDY_CTLS_VW
+ 4) Grant errors for view NCI_LAB_LOAD_STUDY_CTLS_VW
+ 5) Public Synonym already exists for view NCI_CDW_LAB_MAP_CROSSREF
+ 6) Compile errors for procedures
+ 7) Compile Errors with package CDW_DATA_TRANSFER_V3
+
+These errors can be ignored because they rely on the entire install to be completed
+
+At Step 53a, executing the script Install_1.0.4.sql will have the following errors that can be ignored:
+ 1) Drop table error for NCI_LABS_AUTOLOAD_HOLD
+ 2) Drop table error for NCI_LABS_MANUAL_LOAD_BATCHES
+ 3) Drop table error for NCI_LABS_MANUAL_LOAD_CTL
+ 5) Public Synonym already exists for view NCI_LABS_MANUAL_LOAD_HOLD
+ 
+These errors can be ignored because they rely on the entire install to be completed
+
+
+	
+

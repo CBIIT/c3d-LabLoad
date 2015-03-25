@@ -1,0 +1,81 @@
+Enter value for labloadowner: OPS$LABLDR
+old   1: create public synonym NCI_UOMS  for &&LabLoadOwner..NCI_UOMS
+new   1: create public synonym NCI_UOMS  for OPS$LABLDR.NCI_UOMS
+
+Synonym created.
+
+Elapsed: 00:00:00.02
+old   1: create public synonym NCI_LABS_LOAD_SPPDQ_VW   for &&LabLoadOwner..NCI_LABS_LOAD_SPPDQ_VW
+new   1: create public synonym NCI_LABS_LOAD_SPPDQ_VW   for OPS$LABLDR.NCI_LABS_LOAD_SPPDQ_VW
+
+Synonym created.
+
+Elapsed: 00:00:00.02
+old   1: create public synonym NCI_LABS_REV_SPPDQ_VW    for &&LabLoadOwner..NCI_LABS_REV_SPPDQ_VW
+new   1: create public synonym NCI_LABS_REV_SPPDQ_VW    for OPS$LABLDR.NCI_LABS_REV_SPPDQ_VW
+
+Synonym created.
+
+Elapsed: 00:00:00.02
+old   1: create public synonym NCI_STUDY_LABDCM_EVENTS_VW  for &&LabLoadOwner..NCI_STUDY_LABDCM_EVENTS_VW
+new   1: create public synonym NCI_STUDY_LABDCM_EVENTS_VW  for OPS$LABLDR.NCI_STUDY_LABDCM_EVENTS_VW
+
+Synonym created.
+
+Elapsed: 00:00:00.02
+old   1: create public synonym LABTESTS  for &&LabLoadOwner..LABTESTS
+new   1: create public synonym LABTESTS  for OPS$LABLDR.LABTESTS
+
+Synonym created.
+
+Elapsed: 00:00:00.02
+old   1: create public synonym NCI_LAB_LOAD_CTL   for &&LabLoadOwner..NCI_LAB_LOAD_CTL
+new   1: create public synonym NCI_LAB_LOAD_CTL   for OPS$LABLDR.NCI_LAB_LOAD_CTL
+
+Synonym created.
+
+Elapsed: 00:00:00.02
+old   1: create public synonym NCI_LAB_VALID_PATIENTS   for &&LabLoadOwner..NCI_LAB_VALID_PATIENTS
+new   1: create public synonym NCI_LAB_VALID_PATIENTS   for OPS$LABLDR.NCI_LAB_VALID_PATIENTS
+
+Synonym created.
+
+Elapsed: 00:00:00.02
+old   1: create public synonym NCI_LABS  for &&LabLoadOwner..NCI_LABS
+new   1: create public synonym NCI_LABS  for OPS$LABLDR.NCI_LABS
+
+Synonym created.
+
+Elapsed: 00:00:00.02
+old   1: create public synonym NCI_LABS_ERROR_LABS   for &&LabLoadOwner..NCI_LABS_ERROR_LABS
+new   1: create public synonym NCI_LABS_ERROR_LABS   for OPS$LABLDR.NCI_LABS_ERROR_LABS
+
+Synonym created.
+
+Elapsed: 00:00:00.02
+old   1: create public synonym NCI_STUDY_LABDCM_EVENTS_TB  for &&LabLoadOwner..NCI_STUDY_LABDCM_EVENTS_TB
+new   1: create public synonym NCI_STUDY_LABDCM_EVENTS_TB  for OPS$LABLDR.NCI_STUDY_LABDCM_EVENTS_TB
+
+Synonym created.
+
+Elapsed: 00:00:00.02
+Enter value for log_util_owner: C3DUTIL
+old   1: create public synonym MESSAGE_LOGS for &&Log_Util_Owner..MESSAGE_LOGS
+new   1: create public synonym MESSAGE_LOGS for C3DUTIL.MESSAGE_LOGS
+
+Synonym created.
+
+Elapsed: 00:00:00.03
+Enter value for uom_table_owner: OPS$LABLDR
+old   1: Create public synonym NCI_UOM_MAIN for &&UOM_Table_Owner..NCI_UOM_MAIN
+new   1: Create public synonym NCI_UOM_MAIN for OPS$LABLDR.NCI_UOM_MAIN
+
+Synonym created.
+
+Elapsed: 00:00:00.02
+old   1: create public synonym LOG_UTIL for &&Log_Util_Owner..LOG_UTIL
+new   1: create public synonym LOG_UTIL for C3DUTIL.LOG_UTIL
+
+Synonym created.
+
+Elapsed: 00:00:00.02

@@ -1,0 +1,1 @@
+sqlldr userid=ops$bdl/prod#333@ocdev control=Manual_load_LABS.ctl log=Manual_load_LABS.log

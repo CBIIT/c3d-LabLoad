@@ -1,0 +1,35 @@
+
+CLEAN DATA CHECK                                         DATE                   
+-------------------------------------------------------- ---------              
+Checking database for issues before executing validation 08-APR-13              
+
+Enter Study ID: LAB_LOADER
+Enter Patient Position: 101
+Enter Patient ID: 0999101
+
+Search With                                                                     
+----------------------                                                          
+Patient Id = 0999101                                                            
+Patient position = 101                                                          
+Study Id = LAB_LOADER                                                           
+
+
+Patient Position should exist                                                   
+-------------------------------                                                 
+Patient Position does exist                                                     
+
+
+Table should be clean                                                           
+----------------------------                                                    
+CDW_LAB_RESULTS is NOT clean                                                    
+
+
+Table should be clean                                                           
+------------------------------------                                            
+MIS_LAB_RESULTS_CURRENT is clean                                                
+
+
+Table should be clean                                                           
+---------------------                                                           
+NCI_LABS is NOT clean                                                           
+

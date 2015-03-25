@@ -1,0 +1,19 @@
+; Lab Loader Administrator UI
+; prc 03/08/2005 - Added Lab Load Interface (Prototype)
+[LabLoaderUI]
+baseHTMLJInitiator=d:\opapps45\html\opa45_basejini.htm
+serverURL=/servlet/opaservlet
+serverApp=opa45
+jinit_download_page=/opa45/opa_jinit_download.htm
+workingDirectory=d:\ncicboraapps
+form=LabLoaderUI.fmx term=d:\opapps45\opa\opa45_fmrpcweb.res
+archive_jini=f60all_jinit.jar
+separateFrame=True
+otherparams=
+width=600
+height=600
+pageTitle=NCI Oracle Pharmaceuticals Application - Lab Loader Admin UI
+colorScheme=blue
+background=no
+opa_file_viewing=
+

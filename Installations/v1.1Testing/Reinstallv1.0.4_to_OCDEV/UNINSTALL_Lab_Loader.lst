@@ -1,0 +1,350 @@
+SQL> 
+SQL> Select to_char(sysdate,'MM/DD/YYYY HH24:MI:SS') "Execution Date", User "User"
+  2    from dual;
+
+Execution Date      User                                                        
+------------------- ------------------------------                              
+04/09/2013 14:37:24 OPS$BDL                                                     
+
+SQL> 
+SQL> -- DROP SEQUENCES
+SQL> Prompt ...Dropping Sequences
+...Dropping Sequences
+SQL> Drop sequence NLB_SEQ
+  2  /
+
+Sequence dropped.
+
+SQL> 
+SQL> --DROP TABLES
+SQL> Prompt ...Dropping Tables
+...Dropping Tables
+SQL> Drop Table CDW_LAST_LOAD
+  2  /
+
+Table dropped.
+
+SQL> 
+SQL> --DROP INDEXES
+SQL> Prompt ...Dropping Table Indexes
+...Dropping Table Indexes
+SQL> DROP INDEX CLR_RESIDX
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX CLR_PAT_DATE
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NCI_LABS_TEMP
+  2  /
+DROP INDEX NCI_LABS_TEMP
+           *
+ERROR at line 1:
+ORA-01418: specified index does not exist 
+
+
+SQL> 
+SQL> DROP INDEX NCI_LABS_PTLAB
+  2  /
+DROP INDEX NCI_LABS_PTLAB
+           *
+ERROR at line 1:
+ORA-01418: specified index does not exist 
+
+
+SQL> 
+SQL> DROP INDEX NCI_LAB_IDX5
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NCI_LABS_TMPIDX
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NCI_LABS_LLUI1
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NCI_LABS_INX8
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NCI_LABS_INX3
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NCI_LABS_ERR2
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NCI_LABS_ERR1
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NL_FSL
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NL_LSLO
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NL_IDR1
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NL_PLO
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NLM_FNDQST_INX
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NCI_LAB_MAPPING_IDX
+  2  /
+DROP INDEX NCI_LAB_MAPPING_IDX
+           *
+ERROR at line 1:
+ORA-01418: specified index does not exist 
+
+
+SQL> 
+SQL> DROP INDEX NLVP_IDX3
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NSPI_PTID
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> DROP INDEX NSPI_DUPIDX
+  2  /
+
+Index dropped.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> --DROP VIEWS
+SQL> Prompt ...Dropping Views
+...Dropping Views
+SQL> Drop View C3D_ACCESSIBLE_STUDIES_VW
+  2  /
+Drop View C3D_ACCESSIBLE_STUDIES_VW
+*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> 
+SQL> Drop View LABTESTS
+  2  /
+Drop View LABTESTS
+*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> 
+SQL> Drop View NCI_CDW_LAB_MAP_CROSSREF
+  2  /
+
+View dropped.
+
+SQL> 
+SQL> Drop View NCI_STUDY_ALL_DCMS_EVENTS_VW
+  2  /
+
+View dropped.
+
+SQL> 
+SQL> Drop View NCI_STUDY_DCMS_VW
+  2  /
+
+View dropped.
+
+SQL> 
+SQL> Drop View NCI_STUDY_DCMS_EVENTS_VW
+  2  /
+
+View dropped.
+
+SQL> 
+SQL> Drop View NCI_STUDY_LABDCM_EVENTS_VW
+  2  /
+
+View dropped.
+
+SQL> 
+SQL> Drop View NCI_UOMS
+  2  /
+Drop View NCI_UOMS
+*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> 
+SQL> Drop View STUDY_REPEAT_DEFAULTS_VW
+  2  /
+Drop View STUDY_REPEAT_DEFAULTS_VW
+*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> 
+SQL> Drop View DUPLICATE_LAB_MAPPINGS
+  2  /
+Drop View DUPLICATE_LAB_MAPPINGS
+*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> 
+SQL> Drop View NCI_LABS_LOAD_SPPDQ_VW
+  2  /
+
+View dropped.
+
+SQL> 
+SQL> Drop View NCI_LAB_LOAD_STUDY_SEC_VW
+  2  /
+
+View dropped.
+
+SQL> 
+SQL> Drop View NCI_LAB_VALID_PATIENTS_VW
+  2  /
+
+View dropped.
+
+SQL> 
+SQL> Drop View PATIENT_ID_PTID_VW
+  2  /
+Drop View PATIENT_ID_PTID_VW
+*
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> 
+SQL> Drop View NCI_LAB_DUP_PATIENTS_VW
+  2  /
+
+View dropped.
+
+SQL> 
+SQL> Drop View NCI_LAB_LOAD_STUDY_CTLS_VW
+  2  /
+
+View dropped.
+
+SQL> 
+SQL> Drop View NCI_LABS_DCM_QUESTS_VW
+  2  /
+
+View dropped.
+
+SQL> 
+SQL> --DROP Procedures/Functions/Packages
+SQL> Prompt ...Dropping Procedures/Functions/Packages
+...Dropping Procedures/Functions/Packages
+SQL> Drop Package AUTOMATE_BDL
+  2  /
+
+Package dropped.
+
+SQL> 
+SQL> Drop Package CDW_LOAD_LAB_FTPDATA
+  2  /
+
+Package dropped.
+
+SQL> 
+SQL> Drop Package INSERT_LAB_DATA
+  2  /
+
+Package dropped.
+
+SQL> 
+SQL> Drop Procedure LOAD_LAB_RESULTS
+  2  /
+
+Procedure dropped.
+
+SQL> 
+SQL> Drop Procedure LOAD_LAB_RESULTS_UPD
+  2  /
+
+Procedure dropped.
+
+SQL> 
+SQL> Drop Package CDW_DATA_TRANSFER_V3
+  2  /
+
+Package dropped.
+
+SQL> 
+SQL> Drop Function GET_RESPONSE_VALUE
+  2  /
+
+Function dropped.
+
+SQL> 
+SQL> Drop Function MAKE_NUMBER
+  2  /
+
+Function dropped.
+
+SQL> 
+SQL> Drop Package NCI_LABS_MANUAL_LOADER
+  2  /
+
+Package dropped.
+
+SQL> 
+SQL> PROMPT
+
+SQL> PROMPT FINISHED!
+FINISHED!
+SQL> PROMPT
+
+SQL> 
+SQL> Spool off

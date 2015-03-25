@@ -1,0 +1,34 @@
+REM -- PRC: Lab Loader AUTOLOADER Test Data 
+REM 
+REM -- Study Setup for ML_UnitTest1.3
+REM -- PRC: 10/19/07: Changed script to only insert if the study does not already exist,
+REM --                and added an update statement incase the study already exists.
+
+INSERT INTO NCI_LABS_MANUAL_LOAD_CTL 
+( STUDY, HOLD_DATA_CHANGES, AUTO_CHANGE_HOLD_DATA,
+  AUTO_MOVE_TO_STAGE, AUTO_CHANGE_STAGE_DATA, AUTO_MOVE_TO_LOADER, AUTO_LOAD_TO_OC, CREATE_USER,
+  CREATE_DATE, MODIFY_USER, MODIFY_DATE, STAGE_DATA_CHANGES,
+  INBOUND_STUDY ) 
+select  
+  '02_C_0229', NULL, 'N', 
+  'N', 'N', 'N', 'N', USER, 
+  SYSDATE, NULL,  NULL, NULL, 
+  'APOP_STUDY_N3456253'
+from dual
+  where not exists (select 'X' from nci_labs_manual_load_ctl
+                     where study = '02_C_0229'); 
+
+Update NCI_LABS_MANUAL_LOAD_CTL 
+   set HOLD_DATA_CHANGES      = NULL,
+       AUTO_CHANGE_HOLD_DATA  = 'N',
+       AUTO_MOVE_TO_STAGE     = 'N', 
+       AUTO_CHANGE_STAGE_DATA = 'N', 
+       AUTO_MOVE_TO_LOADER    = 'N', 
+       AUTO_LOAD_TO_OC        = 'N',    
+       MODIFY_USER            = USER,        
+       MODIFY_DATE            = SYSDATE,            
+       STAGE_DATA_CHANGES     = NULL,
+       INBOUND_STUDY          = 'APOP_STUDY_N3456253'
+where STUDY = '02_C_0229'; 
+
+COMMIT;

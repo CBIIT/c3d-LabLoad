@@ -1,0 +1,28 @@
+SQL> 
+SQL> -- This script will check for the reference Table NCI_UOM_MAIN.  If the table exists,
+SQL> -- the message "UOM Reference Table exists!" will appear.	If the table does not exist,
+SQL> -- the message "UOM Reference Table does not exist and must be created!" will appear.
+SQL> 
+SQL> select 'UOM Reference Table does not exist and must be created!' "Check"
+  2    from dual
+  3   where not exists (
+  4  	    select owner, synonym_name, table_name
+  5  	      from all_synonyms
+  6  	     where synonym_name ='NCI_UOM_MAIN'
+  7  	       and owner = 'PUBLIC')
+  8  UNION
+  9  select 'UOM Reference Table exists!' "Check"
+ 10    from dual
+ 11   where exists (
+ 12  	    select owner, synonym_name, table_name
+ 13  	      from all_synonyms
+ 14  	     where synonym_name ='NCI_UOM_MAIN'
+ 15  	       and owner = 'PUBLIC')
+ 16  /
+
+Check                                                                           
+-------------------------------------------------------                         
+UOM Reference Table exists!                                                     
+
+SQL> 
+SQL> spool off

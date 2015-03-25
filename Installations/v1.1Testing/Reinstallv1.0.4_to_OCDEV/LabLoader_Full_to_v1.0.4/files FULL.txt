@@ -1,0 +1,124 @@
+This file contains a list and brief description of all of the files used
+during the installation of database objects for the Lab Loader Utility.
+This installation is v1.0 + all increments upto v1.0.4
+
+There are 122 files in all.
+
+alter_tab_nci_lab_load_ctl_qual_val.sql - v1.0.4 specific table modification
+alter_tab_nci_labs_qual_val.sql         - v1.0.4 specific table modification
+automate_bdl_pkg.plsql			- Turns table data into flat files for loading to OC
+BDL_RESPONSE_REPEATS.sql		- Batch Data Load Response table 
+BDL_TEMP_FILES.sql			- Batch DataFile in Table Format
+C3D_ACCESSIBLE_STUDIES_VW.vw		- View of accessible C3D Studies
+cdw_data_transfer_pkg_V3.plsql		- The Primary Lab Loader Package. (v1.0)
+cdw_data_transfer_pkg_v4_as_V3.plsql    - Updated Lab Loader Package (v1.0.3)
+cdw_data_transfer_pkg_v4_as_V3.sql      - Updated Lab Loader Package (v1.0.4)
+CDW_LAB_RESULTS.sql			- Table Hold Lab Test Result Records
+CDW_LAST_LOAD.sql			- Table Holds the date of last load (execution)
+CDW_LAST_LOAD_DATA.sql			- Primes table with required data.
+CDW_load_lab_FTPData.plsql		- Package used to read RAW Lab Test Data Files for candidate records
+CDW_load_sybase_FTPData.plsql		- Package used to read RAW Lab Test Data Files
+CDWDataLoader_Schema.sql                - Script for creating schema for CDW Data Loader Utility
+Check_FTP_DIR.sql			- Script that checks for Directory Object FTP_DIR
+Check_LAB_DIR.sql			- Script that checks for Directory Object LAB_DIR
+Check_log_util.sql			- Script that checks for Log_Util Utility
+Check_UOM_Ref.sql			- Script that checks for UOM Table 
+cr_insert_labdata_pkg_vLLI.plsql	- Package used to load data into Batch Date File Tables
+cr_insert_labdata_pkg_vLLI.sql   	- Updated to batch data file table Package 
+create_labload_public_synonyms.sql	- Script to create all public synonyms of Lab Loader
+create_ocuser_profile.sql               - Script to create security profile options
+Deploy Enhancement instructions FULL.txt- Text file of deployment instructions v1.0 - v1.0.4     
+drop_LabLoad_public_synonyms.sql	- Script that removes all public synonyms of Lab Loader
+DUPLICATE_LAB_MAPPINGS.vw		- View that shows Lab Test Mapped to different Questions
+files FULL.txt				- This File
+Find_external_Owners.sql                - Script used to identify Current Utility Owners
+Find_LabLoader_Owner.sql		- Script used to identify Lab Loader Utility Owner
+Formsweb_cfg_LLI.TXT			- Oracle Forms Web Configuration for LLI UI
+install_CDW_Data_Loader.sql             - Installation script for CDW Data Loader utility
+Install_LabDir_Dir.sql			- Script to create LAD_DIR directory database object
+Install_LabFtp_Dir.sql			- Script to create FTP_DIR directory database object
+install_Lab_Loader.sql			- Script to install Lab Loader Utility specific objects
+install_log_Util.sql			- Script to install Log Utility used by Lab Loader
+install_UOM_Ref.sql			- Script to install Unit of Measure Reference Table
+Install_1.0.2.sql                       - Script to install v1.0.2 Lab Loader Enhancements
+Install_1.0.3.sql                       - Script to install v1.0.3 Lab Loader Enhancements
+Install_1.0.4.sql                       - Script to install v1.0.4 Lab Loader Enhancements
+LabLoader_Schema.sql			- Script to create Lab Loader Owner, includes required security
+LabLoadInter.htm                        - HTML front end for Web Forms LLI User Interface
+LABTESTS.vw				- View of all OC Questions that are Lab Tests
+LLI.fmb                                 - Lab Loader Interface UI Oracle Forms source
+LLI.fmx                                 - Lab Loader Interface UI Oracle Forms executable
+LLIMENU.mmb                             - Lab Loader Interface UI Oracle Menu source
+LLIMENU.mmx                             - Lab Loader Interface UI Oracle Menu executable
+load_lab_results.plsql			- Procedure used to process Test Data into OC Questions.
+load_lab_results.sql			- Procedure used to process Test Data into OC Questions. (v1.0.4)
+load_lab_results_upd.plsql		- Procedure used to process Test Data into OC Questions.
+load_lab_results_upd.sql		- Procedure used to process Test Data into OC Questions. (v1.0.4)
+Log_Util.sql				- Log Utility Package (See install_log_util.sql)
+Log_Util_Public_Syns.sql                - Script to create Public Synonyms for Log Utility
+Message_logs.sql			- Primary Table of Log Utility Package (See install_log_util.sql)
+Message_logs_arch.sql			- Archive Table of Log Utility Package (See install_log_util.sql)
+MIS_CDR_TESTS.sql			- Table holds Lab Test Names and Dates loaded from RAW Files
+MIS_LAB_RESULTS_CURRENT.sql		- Table holds ALL Lab Test Results, loaded from RAW files
+MIS_LAB_RESULTS_HISTORY.sql		- Table holds Historical Lab Test Results loaded from RAW files
+MIS_PATIENT_LIST.sql                    - Table holds Patient Identifiers loaded from RAW files
+MIS_PROT_PAT_CDRLIST.sql                - Table holds Patient/Protocol relationships loaded from RAW files
+MIS_PROTOCOL_LIST.sql                   - Table holds Protocols loaded from RAW files
+Miscell_public_Syns.sql                 - Script used to create public synonyms for miscellaneous Lab Loader objects.
+NCI_CDW_LAB_MAP_CROSSREF.vw		- View of Lab Test Ids sharing same EC_ID
+NCI_INVALID_LABTESTS.sql		- Table that stores known Invalid Tests
+NCI_INVALID_LABTESTS_DATA.sql		- Data for Invalid Tests Table
+NCI_INVALID_RESULTS.sql			- Table that stores known Invalid Result Values
+NCI_INVALID_RESULTS_DATA.sql		- Data for Invalid Result Table
+nci_lab_dup_patients_vw.vw              - Lab Loader view identifing Duplicate Patients.
+NCI_LAB_LOAD_CTL.sql			- The Lab Load Control Table, study specific controls
+nci_lab_load_ctl_alts.sql               - Lab Load Control Table alterations (v1.0.3)
+NCI_LAB_LOAD_CTL_DATA.sql		- The data for the Lab Load Control Table.
+NCI_LAB_LOAD_PATIENT_LOAD.sql		- Processing table to hold patients and loading information
+NCI_LAB_LOAD_STUDY_CTLS_VW.sql          - Lab Load view for Study Controls (v1.0.3)
+nci_lab_load_study_ctls_vw.vw           - Lab Load view for Study Controls (v1.0.4)
+NCI_LAB_MAPPING.sql			- Table holds Lab Test Ids and their mapping to OC Questions
+nci_lab_mapping_alts.sql                - Lab Mapping table alterations (v1.0.3)
+NCI_LAB_MAPPING_DATA.sql		- Data for the Lab Mapping Table
+NCI_LAB_VALID_PATIENTS.sql		- Table that receives list of Valid Patients during processing
+NCI_LAB_VALID_PATIENTS_VW.vw		- View of valid patients. Data from here moves to a table for speed.
+NCI_LABS.sql				- The Lab Loader Table.
+NCI_LABS_AUTOLOAD_HOLD.sql              - Lab Loader AutoLoader Batch Processing Hold Table (v1.0.4)
+NCI_LABS_DCM_QUESTS_VW.sql              - Lab Loader view shows DCM and their Questions.
+NCI_LABS_ERROR_LABS.sql			- Table that holds requests for Error Lab Reloads
+NCI_LABS_LOAD_SPPDQ_VW.vw		- View for LLI records marked for "Loading"
+NCI_LABS_MANUAL_LOAD_BATCHES.sql        - Lab Loader AutoLoader Batch Log table
+NCI_LABS_MANUAL_LOAD_CTL.sql            - Lab Loader AutoLoader Study Control Table
+NCI_LABS_MANUAL_LOAD_HOLD.sql           - Lab Loader AutoLoader Primary Processing Table
+NCI_LABS_MANUAL_LOAD_STAGE.sql          - Lab Loader AutoLoader Staging Table
+nci_labs_manual_load_trigger.sql        - Lab Loader AutoLoader Primary Processing Table "On-Insert" Trigger
+nci_labs_manual_loader.plsql            - Lab Loader AutoLoader Processing Package
+NCI_LABS_REV_SPPDQ_VW.vw		- View for LLI records needing "Reviewed"
+NCI_MANUAL_LOAD_BATCH_SEQ.sql           - Lab Loader AutoLoader Batch ID Sequence
+NCI_MANUAL_LOAD_SEQ.sql                 - Lab Loader AutoLoader Record ID Sequence
+NCI_STUDY_ALL_DCMS_EVENTS_VW.sql	- View that shows All DCMS and their cooresponding event names (v1.0.4)
+NCI_STUDY_ALL_DCMS_EVENTS_VW.vw		- View that shows All DCMS and their cooresponding event names (v1.0+)
+NCI_STUDY_DCMS_VW.vw			- View that shows all study DCMS
+NCI_STUDY_LABDCM_EVENTS_TB.sql		- Table of Lab Specific DCM Events (Tabled for speed)
+NCI_STUDY_LABDCM_EVENTS_VW.vw		- View of Lab SPecific DCM Events (See above)
+NCI_STUDY_PATIENT_IDS.sql               - Lab Loader Table that holds identified Patients
+NCI_STUDY_PATIENT_IDS_CTL.sql           - Lab Loader Table that holds Study Specific Patients Metadata 
+NCI_STUDY_PATIENT_IDS_CTL_DATA.sql      - Data to populate Default Study Specific Patients Metadata 
+NCI_UOM_MAIN.sql			- Table that contains all approved Unit of Measures
+NCI_UOM_MAIN_DATA.SQL			- Data for Unit of Measure table
+NCI_UOM_MAPPING.SQL			- Table contains mapping for received UOM to prefered UOM 
+NCI_UOM_MAPPING_DATA.SQL		- Data for UOM Mapping table
+NCI_UOMS.vw				- View of all Valid Lab Unit of Measures
+NCI_UPLOAD_SYBASE_LAB_RESULTS.sql	- Table used to hold Lab Test data read from RAW files
+NLB_SEQ.seq				- Sequence
+NLM_SEQ.seq				- Sequence
+OFGCALL.PLL                             - PL/SQL Library File used by Lab Loader Forms
+OFGMES.PLL                              - PL/SQL Library File used by Lab Loader Forms
+OFGNAVL.PLL                             - PL/SQL Library File used by Lab Loader Forms
+OFGTEL.PLL                              - PL/SQL Library File used by Lab Loader Forms
+Reset_Original_LabLoad_public_synonyms.sql - Sets Public Synonyms to Original Values
+SimpleInstall_CDW_Data_Load.txt         - Installation instrcutions for CDW Data Loader Utility
+SimpleInstall_Lab_Loader.txt            - Installation instrcutions for CDW Data Loader Utility
+STUDY_REPEAT_DEFAULTS_VW.vw		- View of all Repeat Defaults
+SubmitPsubLoad.plsql                    - Lab Loader PSUB Batch Job Submission and Tracker
+

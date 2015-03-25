@@ -1,0 +1,2866 @@
+
+Execution Date      User                                                                                                                                        
+------------------- ------------------------------                                                                                                              
+03/18/2013 17:18:56 OPS$LABLDR                                                                                                                                  
+
+...Installing Sequences
+* * * * * * *
+Sequence GLRS_SEQ
+* * * * * * *
+CREATE SEQUENCE GLRS_SEQ
+                *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+* * * * * * *
+Sequence MD_LABS_SEQ
+* * * * * * *
+CREATE SEQUENCE MD_LABS_SEQ
+                *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+* * * * * * *
+Sequence NCI_MANUAL_LOAD_SEQ
+* * * * * * *
+CREATE SEQUENCE NCI_MANUAL_LOAD_SEQ
+                *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+* * * * * * *
+Sequence NLB_SEQ
+* * * * * * *
+
+Sequence created.
+
+* * * * * * *
+Sequence NLM_SEQ
+* * * * * * *
+CREATE SEQUENCE NLM_SEQ
+                *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+...Installing Tables, Index, Synonym and Privileges.
+* * * * * * *
+Object GU_LAB_RESULTS_HOLD
+* * * * * * *
+Enter value for users_tablespace: USERS
+
+Table created.
+
+* * * * * * *
+Object GU_LAB_RESULTS_STAGE
+* * * * * * *
+
+Table created.
+
+
+Trigger created.
+
+No errors.
+* * * * * * *
+Object MDLABS_STG
+* * * * * * *
+
+Table created.
+
+
+Trigger created.
+
+No errors.
+
+Trigger created.
+
+No errors.
+
+Trigger created.
+
+No errors.
+* * * * * * *
+Object MDLABS_HOLD
+* * * * * * *
+
+Table created.
+
+* * * * * * *
+Object NCI_LABS_MANUAL_LOAD_STAGE
+* * * * * * *
+DROP TABLE NCI_LABS_MANUAL_LOAD_STAGE
+           *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+
+Table created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Grant succeeded.
+
+* * * * * * *
+Object NCI_LABS_MANUAL_LOAD_HOLD
+* * * * * * *
+DROP TABLE NCI_LABS_MANUAL_LOAD_HOLD
+           *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+
+Table created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Warning: Trigger created with compilation errors.
+
+Errors for TRIGGER BI_ER_MLT:
+
+LINE/COL ERROR                                                                                                                                                  
+-------- -----------------------------------------------------------------                                                                                      
+57/10    PL/SQL: SQL Statement ignored                                                                                                                          
+58/17    PL/SQL: ORA-00942: table or view does not exist                                                                                                        
+92/10    PL/SQL: SQL Statement ignored                                                                                                                          
+97/36    PL/SQL: ORA-00942: table or view does not exist                                                                                                        
+CREATE PUBLIC SYNONYM NCI_LABS_MANUAL_LOAD_HOLD FOR NCI_LABS_MANUAL_LOAD_HOLD
+                      *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+
+Grant succeeded.
+
+* * * * * * *
+Object BDL_TEMP_FILES
+* * * * * * *
+
+Table created.
+
+
+Trigger created.
+
+No errors.
+
+Trigger created.
+
+No errors.
+* * * * * * *
+Object CDW_LAB_RESULTS
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+
+Index created.
+
+* * * * * * *
+Object CDW_LAST_LOAD
+* * * * * * *
+
+Table created.
+
+* * * * * * *
+Data for CDW_LAST_LOAD
+* * * * * * *
+
+1 row created.
+
+
+Commit complete.
+
+* * * * * * *
+Object MIS_CDR_TESTS
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+* * * * * * *
+Object MIS_LAB_RESULTS_HISTORY
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+
+Index created.
+
+* * * * * * *
+Object NCI_INVALID_LABTESTS
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+
+Trigger created.
+
+No errors.
+
+Trigger created.
+
+No errors.
+* * * * * * *
+Data for NCI_INVALID_LABTESTS
+* * * * * * *
+
+1 row created.
+
+
+1 row created.
+
+
+Commit complete.
+
+* * * * * * *
+Object NCI_INVALID_RESULTS
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+
+Trigger created.
+
+No errors.
+
+Trigger created.
+
+No errors.
+* * * * * * *
+Data for NCI_INVALID_RESULTS
+* * * * * * *
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+Commit complete.
+
+* * * * * * *
+Object NCI_LABS
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+
+Trigger created.
+
+No errors.
+
+Trigger created.
+
+No errors.
+* * * * * * *
+Object NCI_LABS_ERROR_LABS
+* * * * * * *
+
+Table created.
+
+
+Trigger created.
+
+No errors.
+
+Trigger created.
+
+No errors.
+* * * * * * *
+Object NCI_LAB_LOAD_CTL
+* * * * * * *
+
+Table created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Index created.
+
+
+Index created.
+
+
+Trigger created.
+
+No errors.
+
+Trigger created.
+
+No errors.
+CREATE PUBLIC SYNONYM NCI_LAB_LOAD_CTL FOR NCI_LAB_LOAD_CTL
+                      *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+* * * * * * *
+Data for NCI_LAB_LOAD_CTL
+* * * * * * *
+
+1 row created.
+
+
+1 row created.
+
+
+Commit complete.
+
+* * * * * * *
+Object NCI_LAB_MAPPING
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+
+Trigger created.
+
+No errors.
+
+Trigger created.
+
+No errors.
+* * * * * * *
+Data for NCI_LAB_MAPPING
+* * * * * * *
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+Commit complete.
+
+* * * * * * *
+Object NCI_LAB_VALID_PATIENTS
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+* * * * * * *
+Object NCI_STUDY_LABDCM_EVENTS_TB
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+
+Index created.
+
+* * * * * * *
+Object NCI_UOM_MAPPING
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+
+Trigger created.
+
+No errors.
+
+Trigger created.
+
+No errors.
+* * * * * * *
+Data for NCI_UOM_MAPPING
+* * * * * * *
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+Commit complete.
+
+* * * * * * *
+Object NCI_UPLOAD_SYBASE_LAB_RESULTS
+* * * * * * *
+
+Table created.
+
+* * * * * * *
+Object NCI_LAB_LOAD_PATIENT_LOAD
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+* * * * * * *
+Object BDL_RESPONSE_REPEATS
+* * * * * * *
+
+Table created.
+
+
+Trigger created.
+
+No errors.
+
+Trigger created.
+
+No errors.
+* * * * * * *
+Object NCI_STUDY_PATIENT_IDS
+* * * * * * *
+
+Table created.
+
+* * * * * * *
+Object NCI_STUDY_PATIENT_IDS_CTL
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+* * * * * * *
+Data For NCI_STUDY_PATIENT_IDS_CTL
+* * * * * * *
+
+1 row created.
+
+
+Commit complete.
+
+...Installing Views...
+* * * * * * *
+View C3D_ACCESSIBLE_STUDIES_VW
+* * * * * * *
+
+View created.
+
+* * * * * * *
+View LABTESTS
+* * * * * * *
+
+View created.
+
+Grant select on labtest to public
+                *
+ERROR at line 1:
+ORA-01031: insufficient privileges 
+
+
+* * * * * * *
+View NCI_CDW_LAB_MAP_CROSSREF
+* * * * * * *
+
+Warning: View created with compilation errors.
+
+CREATE PUBLIC SYNONYM NCI_CDW_LAB_MAP_CROSSREF FOR NCI_CDW_LAB_MAP_CROSSREF
+                      *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+GRANT SELECT ON  NCI_CDW_LAB_MAP_CROSSREF TO LABLOADER
+                 *
+ERROR at line 1:
+ORA-04063: view "OPS$LABLDR.NCI_CDW_LAB_MAP_CROSSREF" has errors 
+
+
+GRANT SELECT ON  NCI_CDW_LAB_MAP_CROSSREF TO LABLOADER_ADMIN
+                 *
+ERROR at line 1:
+ORA-04063: view "OPS$LABLDR.NCI_CDW_LAB_MAP_CROSSREF" has errors 
+
+
+GRANT SELECT ON  NCI_CDW_LAB_MAP_CROSSREF TO LABLOADER_REVIEW
+                 *
+ERROR at line 1:
+ORA-04063: view "OPS$LABLDR.NCI_CDW_LAB_MAP_CROSSREF" has errors 
+
+
+* * * * * * *
+View NCI_STUDY_ALL_DCMS_EVENTS_VW
+* * * * * * *
+
+View created.
+
+* * * * * * *
+View NCI_STUDY_DCMS_VW
+* * * * * * *
+
+View created.
+
+* * * * * * *
+View NCI_STUDY_LABDCM_EVENTS_VW
+* * * * * * *
+
+View created.
+
+* * * * * * *
+View NCI_UOMS
+* * * * * * *
+
+View created.
+
+* * * * * * *
+View STUDY_REPEAT_DEFAULTS_VW
+* * * * * * *
+
+View created.
+
+* * * * * * *
+View DUPLICATE_LAB_MAPPINGS
+* * * * * * *
+
+View created.
+
+* * * * * * *
+View NCI_LABS_LOAD_SPPDQ_VW
+* * * * * * *
+
+View created.
+
+* * * * * * *
+View NCI_LABS_REV_SPPDQ_VW
+* * * * * * *
+
+View created.
+
+* * * * * * *
+View NCI_LAB_VALID_PATIENTS_VW
+* * * * * * *
+
+View created.
+
+CREATE PUBLIC SYNONYM NCI_LAB_VALID_PATIENTS_VW FOR NCI_LAB_VALID_PATIENTS_VW
+                      *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+* * * * * * *
+View NCI_STUDY_DCMS_EVENTS_VW
+* * * * * * *
+
+View created.
+
+* * * * * * *
+View NCI_LAB_LOAD_STUDY_SEC_VW
+* * * * * * *
+
+View created.
+
+* * * * * * *
+View NCI_LAB_VALID_PT_DATES_VW
+* * * * * * *
+
+Warning: View created with compilation errors.
+
+* * * * * * *
+View patient_id_ptid_vw.vw
+* * * * * * *
+
+View created.
+
+...Installing Packages
+* * * * * * *
+Package SubmitPsubLoad
+* * * * * * *
+
+Warning: Procedure created with compilation errors.
+
+Errors for PROCEDURE SUBMIT_PSUB_LOAD:
+
+LINE/COL ERROR                                                                                                                                                  
+-------- -----------------------------------------------------------------                                                                                      
+168/19   PLS-00201: identifier                                                                                                                                  
+         'CDW_DATA_TRANSFER_V3.UPDATE_AFTER_BATCH_LOAD' must be declared                                                                                        
+                                                                                                                                                                
+168/19   PL/SQL: Statement ignored                                                                                                                              
+175/19   PLS-00201: identifier                                                                                                                                  
+         'CDW_DATA_TRANSFER_V3.UPDATE_AFTER_BATCH_LOAD' must be declared                                                                                        
+                                                                                                                                                                
+175/19   PL/SQL: Statement ignored                                                                                                                              
+180/19   PLS-00201: identifier                                                                                                                                  
+         'CDW_DATA_TRANSFER_V3.UPDATE_AFTER_BATCH_LOAD' must be declared                                                                                        
+                                                                                                                                                                
+180/19   PL/SQL: Statement ignored                                                                                                                              
+...Installing Packages
+* * * * * * *
+Package automate_bdl_pkg
+* * * * * * *
+
+Package created.
+
+
+Warning: Package Body created with compilation errors.
+
+* * * * * * *
+Package CDW_load_lab_FTPData
+* * * * * * *
+
+Package created.
+
+No errors.
+
+Package body created.
+
+No errors.
+* * * * * * *
+Package cr_insert_labdata_pkg_vLLI
+* * * * * * *
+
+Package created.
+
+No errors.
+
+Package body created.
+
+No errors.
+* * * * * * *
+Package load_lab_results
+* * * * * * *
+
+Procedure created.
+
+* * * * * * *
+Package load_lab_results_upd
+* * * * * * *
+
+Procedure created.
+
+* * * * * * *
+Package cdw_data_transfer_pkg_V3
+* * * * * * *
+
+Package created.
+
+No errors.
+
+Warning: Package Body created with compilation errors.
+
+Errors for PACKAGE BODY CDW_DATA_TRANSFER_V3:
+
+LINE/COL ERROR                                                                                                                                                  
+-------- -----------------------------------------------------------------                                                                                      
+122/21   PL/SQL: SQL Statement ignored                                                                                                                          
+124/28   PL/SQL: ORA-04063: view "OPS$LABLDR.NCI_CDW_LAB_MAP_CROSSREF" has                                                                                      
+         errors                                                                                                                                                 
+                                                                                                                                                                
+199/19   PL/SQL: SQL Statement ignored                                                                                                                          
+201/27   PL/SQL: ORA-04063: view "OPS$LABLDR.NCI_CDW_LAB_MAP_CROSSREF" has                                                                                      
+         errors                                                                                                                                                 
+                                                                                                                                                                
+210/21   PL/SQL: SQL Statement ignored                                                                                                                          
+212/28   PL/SQL: ORA-04063: view "OPS$LABLDR.NCI_CDW_LAB_MAP_CROSSREF" has                                                                                      
+         errors                                                                                                                                                 
+                                                                                                                                                                
+* * * * * * *
+Function Make_number
+* * * * * * *
+
+Function created.
+
+* * * * * * *
+Function Get_Response
+* * * * * * *
+
+Function created.
+
+No errors.
+
+FINISHED!
+

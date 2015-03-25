@@ -1,0 +1,48 @@
+1) Open Excel spreadsheet from e-mail
+2) save spreadsheet as is in loader directory (see below)
+3) Open SQL*Loader Control file for labs (load_GTOWN_labs.ctl)
+4) make sure columns in spreadsheet match order of columns in control file.
+5) Close control file
+6) remove HEADER row from spreadsheet.
+7) Note the # of records 
+8) save spreadsheet as comma delimited file (use same filename, with cvs extention)
+9) close Excel
+10) in working directory, delete the following files if they exists
+	load_GTOWN_LABS.log (previous loader log file)
+	GTown_Labs.dat (previous loader dat file)
+	GTown_Labs.bad (previous loader BAD file)
+	GTown_Labs.dsc (previous loader discard file)
+11) copy cvs version of file to GTown_labs.dat
+12) execute the MS-DOS batch file load_GTOWN_labs.bat
+13) open the loader log file (load_GTOWN_LABS.log) check record count loaded against #7
+14) If a BAD or DISC card file is created, or the Record counts DO NOT MATCH, 
+there is a problem that should be examined.
+
+15) Using TOAD, open the TOAD_GTOWN_LOAD_SCRIPTS.SQL file.
+16) Execute script 1 (move data from stage to hold, while converting date/time)
+17) Check record count
+18) Execute script 2 (copies from Hold to NCI_LABS)
+19) Check Record Count
+18) Execute script 3 (Updates Hold records to complete status)
+19) Check Record Count
+20) execute script 4 (COMMIT)
+21) DONE!
+
+Optional
+--------
+1) to load immediately:
+From Sqlplus, as OPS$BDL,
+
+	exec cdw_data_transfer_v3.get_process_load_labs('WAITING');
+
+
+
+Loader Directory
+----------------
+THe following files should be maintained in a directory for loading 
+purposes.  These files are used to check, load and process Lombardi
+excel data files.
+
+load_GTOWN_labs.ctl  - SQL*Loader control file, reads DAT file.
+load_GTOWN_labs.bat  - MS-Dos Batch file launches SQL*Loader will all of the appropirate parameters.
+TOAD_GTOWN_LOAD_SCRIPTS.SQL  - File of SQL scripts used to process lab data.

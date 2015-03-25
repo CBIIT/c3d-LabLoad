@@ -1,0 +1,57 @@
+
+CLEAN DATA DELETE                                  DATE                         
+-------------------------------------------------- ---------                    
+Deleting from database before executing validation 11-APR-13                    
+
+Enter Study ID: LAB_LOADER
+Enter Patient Position: 101
+Enter Patient ID: 0999101
+
+Search With                                                                     
+----------------------                                                          
+Patient Id = 0999101                                                            
+Patient position = 101                                                          
+Study Id = LAB_LOADER                                                           
+
+
+NOTE                                                                            
+--------------------------------------------------------------------------------
+Use OPA Conduct -> Security -> Delete Study Information to remove the following 
+documents from the patient                                                      
+                                                                                
+
+
+DOCUMENTS NEEDING DELETED                                                       
+-------------------------------------------------------                         
+ENROLLMENT                     - "R4034601"                                     
+MEDICAL RECORD NUMBERS         - "R4034801"                                     
+
+
+NOTE                                                                            
+-------------------------------------                                           
+Deleting records from CDW_LAB_RESULTS                                           
+
+
+15930 rows deleted.
+
+
+NOTE                                                                            
+---------------------------------------------                                   
+Deleting records from MIS_LAB_RESULTS_CURRENT                                   
+
+
+0 rows deleted.
+
+
+NOTE                                                                            
+------------------------------                                                  
+Deleting records from NCI_LABS                                                  
+
+
+15930 rows deleted.
+
+
+NOTE                                                                            
+------------------------------------------------------------------------------  
+Enter "COMMIT;" to complete the deletion or "ROLLBACK;" to cancel the deletion  
+

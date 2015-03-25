@@ -1,0 +1,27 @@
+SQL> 
+SQL> -- This script will check for the reference to the directory LAB_DIR. This directory is used as
+SQL> -- the location batch load temporary processing files. If the directory exists,
+SQL> -- the message "LAB_DIR Directory exists!" will appear.  If the directory does not exist,
+SQL> -- the message "LAB_DIR Directory does not exist and must be created!" will appear.
+SQL> 
+SQL> select 'LAB_DIR Directory does not exist and must be created!' "Check"
+  2    from dual
+  3   where not exists (
+  4  	    select OWNER, DIRECTORY_NAME, DIRECTORY_PATH
+  5  	      from all_directories
+  6  	     where directory_name ='LAB_DIR')
+  7  UNION
+  8  select 'LAB_DIR Directory exists!' "Check"
+  9    from dual
+ 10   where exists (
+ 11  	    select OWNER, DIRECTORY_NAME, DIRECTORY_PATH
+ 12  	      from all_directories
+ 13  	     where directory_name ='LAB_DIR')
+ 14  /
+
+Check                                                                           
+-----------------------------------------------------                           
+LAB_DIR Directory exists!                                                       
+
+SQL> 
+SQL> spool off

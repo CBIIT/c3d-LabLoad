@@ -1,0 +1,100 @@
+
+Install Date         Install User                                                                                                                               
+-------------------- ------------------------------                                                                                                             
+18-MAR-2013 18:16:29 OPS$LABLDR                                                                                                                                 
+
+SQL> 
+SQL> @nci_lab_valid_patients_vw.vw
+SQL> 
+SQL> CREATE OR REPLACE FORCE VIEW NCI_LAB_VALID_PATIENTS_VW
+  2  (PT_ID, PT, STUDY, NCI_INST_CD)
+  3  AS
+  4  SELECT REPLACE (pt_id_ful, '-') pt_id, oc_patient_pos pt, oc_study,
+  5  	       nci_inst_cd_ful nci_inst_cd
+  6  	  FROM nci_study_patient_ids a
+  7  	 WHERE pt_id_ful IS NOT NULL
+  8  	   AND (   (nci_inst_cd_ful LIKE '%NCI%' ) --or nci_inst_cd_ful IN ('GTOWN') )
+  9  		OR (nci_inst_cd_ful = 'NIHCC'
+ 10  		    AND oc_study IN ('97_C_0110', '99_C_0023', '00_C_0030')
+ 11  		   )
+ 12  	  OR exists (select 'x' from NCI_STUDY_PATIENT_IDS_CTL b
+ 13  		      where b.OC_STUDY = a.oc_study
+ 14  			and b.NCI_INST_CD_CONST is not null
+ 15  			and b.NCI_INST_CD_CONST = a.nci_inst_cd_ful)
+ 16  	       )
+ 17  	   AND DECODE
+ 18  		  (INSTR
+ 19  		      (TRANSLATE
+ 20  			  (pt_id_ful,
+ 21  			   './ abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+ 22  			   'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+ 23  			  ),
+ 24  		       'X'
+ 25  		      ),
+ 26  		   0, 'number',
+ 27  		   'not_number'
+ 28  		  ) = 'number';
+
+View created.
+
+SQL> 
+SQL> 
+SQL> CREATE PUBLIC SYNONYM NCI_LAB_VALID_PATIENTS_VW FOR NCI_LAB_VALID_PATIENTS_VW;
+CREATE PUBLIC SYNONYM NCI_LAB_VALID_PATIENTS_VW FOR NCI_LAB_VALID_PATIENTS_VW
+                      *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_LAB_VALID_PATIENTS_VW TO LABLOADER;
+
+Grant succeeded.
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_LAB_VALID_PATIENTS_VW TO LABLOADER_ADMIN;
+
+Grant succeeded.
+
+SQL> 
+SQL> GRANT SELECT ON  NCI_LAB_VALID_PATIENTS_VW TO LABLOADER_REVIEW;
+
+Grant succeeded.
+
+SQL> 
+SQL> 
+SQL> set verify off echo off
+
+Procedure created.
+
+
+Procedure created.
+
+
+Package created.
+
+No errors.
+
+Warning: Package Body created with compilation errors.
+
+Errors for PACKAGE BODY CDW_DATA_TRANSFER_V3:
+
+LINE/COL ERROR                                                                                                                                                  
+-------- -----------------------------------------------------------------                                                                                      
+122/21   PL/SQL: SQL Statement ignored                                                                                                                          
+124/28   PL/SQL: ORA-04063: view "OPS$LABLDR.NCI_CDW_LAB_MAP_CROSSREF" has                                                                                      
+         errors                                                                                                                                                 
+                                                                                                                                                                
+199/19   PL/SQL: SQL Statement ignored                                                                                                                          
+201/27   PL/SQL: ORA-04063: view "OPS$LABLDR.NCI_CDW_LAB_MAP_CROSSREF" has                                                                                      
+         errors                                                                                                                                                 
+                                                                                                                                                                
+210/21   PL/SQL: SQL Statement ignored                                                                                                                          
+212/28   PL/SQL: ORA-04063: view "OPS$LABLDR.NCI_CDW_LAB_MAP_CROSSREF" has                                                                                      
+         errors                                                                                                                                                 
+                                                                                                                                                                
+SQL> -- Data Changes Here
+SQL> 
+SQL> -- none
+SQL> 
+SQL> Set Verify off Echo off

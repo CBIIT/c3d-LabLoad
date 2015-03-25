@@ -1,0 +1,36 @@
+REM -- PRC: Lab Loader AUTOLOADER Test Data 
+REM 
+REM -- Study Setup for ML_UnitTest1.15
+REM -- Study must allow for HOLD data manipulation, 
+REM -- but provide a manipulation script that will not parse or execute.
+
+Update NCI_LABS_MANUAL_LOAD_CTL 
+   set HOLD_DATA_CHANGES      = NULL, 
+       AUTO_CHANGE_HOLD_DATA  = 'N',
+       AUTO_MOVE_TO_STAGE     = 'Y', 
+       AUTO_CHANGE_STAGE_DATA = 'Y', 
+       AUTO_MOVE_TO_LOADER    = 'Y', 
+       AUTO_LOAD_TO_OC        = 'N',    
+       MODIFY_USER            = USER,        
+       MODIFY_DATE            = SYSDATE,            
+       STAGE_DATA_CHANGES     = 'Declare                              '||
+                                'Begin                                '||
+                                '   update nci_labs_manual_load_stage '||
+                                '      set laboratory = ''CDW''       '||
+                                '    where BATCH_ID = #BATCH_ID#;     '||
+                                '                                     '||
+                                '   Log_Util.LogMessage(''STGMAN - ''||to_char(SQL%RowCount)||'' laboratory values changed in stage manipulation.''); '||
+                                '                                     '||
+                                '   update nci_labs_manual_load_stage '||
+                                '      set LAB_SAMPLE_DATE = to_date(LAB_SAMPLE_DATE_RAW||      ' ||
+                                '                                    substr(LAB_SAMPLE_TIME_RAW,1,8)||  ' ||
+                                '                                    substr(LAB_SAMPLE_TIME_RAW,13,2),  ' ||
+                                '                                    ''YYYY/MM/DDHH:MI:SSAM'')          ' || 
+                                '    where BATCH_ID = #BATCH_ID#;     '||
+                                '                                     '||
+                                '   Log_Util.LogMessage(''STGMAN - ''||to_char(SQL%RowCount)||'' sample date values changed in stage manipulation.''); '||
+                                '                                     '||
+                                'End;'                                      
+where STUDY = '00_C_0030'; 
+
+COMMIT;

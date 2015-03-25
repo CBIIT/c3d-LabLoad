@@ -1,0 +1,261 @@
+       'Lab Loader v1.0.4 to v1.1 Install', "Installer"
+                                            *
+ERROR at line 3:
+ORA-00904: "Installer": invalid identifier 
+
+
+Installing New Objects
+...Installing Sequences
+* * * * * * *
+No New Sequences
+...Installing Tables, Index, Synonym and Privileges.
+* * * * * * *
+Table BTRIS_DATA_TRANSFER
+* * * * * * *
+
+Package created.
+
+
+Warning: Package Body created with compilation errors.
+
+* * * * * * *
+Table BTRIS_LAB_INVALID_VALUES
+* * * * * * *
+
+Table created.
+
+
+Trigger created.
+
+No errors.
+
+Trigger created.
+
+No errors.
+* * * * * * *
+Table BTRIS_LAB_RESULTS
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+
+Index created.
+
+* * * * * * *
+Table BTRIS_LAB_TEST_NAMES
+* * * * * * *
+
+Table created.
+
+
+Trigger created.
+
+No errors.
+* * * * * * *
+Table BTRIS_LAB_TEST_RESULTS
+* * * * * * *
+
+Table created.
+
+
+Index created.
+
+* * * * * * *
+Table BTRIS_PROTOCOL_PATIENT
+* * * * * * *
+
+Table created.
+
+* * * * * * *
+Table BTRIS_PROTOCOL_STATUS.sql
+* * * * * * *
+
+Table created.
+
+* * * * * * *
+Indexes for NCI_LABS
+* * * * * * *
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+* * * * * * *
+Indexes for NCI_LAB_LOAD_CTL
+* * * * * * *
+(OC_STUDY, LABORATORY, MAP_VERSION)
+                       *
+ERROR at line 2:
+ORA-00904: "MAP_VERSION": invalid identifier 
+
+
+...Installing New Views...
+* * * * * * *
+View NCI_STUDY_ALL_DCM_EVENTS2_VW
+* * * * * * *
+
+View created.
+
+Installing Altered Objects
+...Altering Tables...
+* * * * * * *
+Table NCI_LABS
+* * * * * * *
+Alter Table NCI_LABS Add  (QUALIFYING_VALUE   VARCHAR2(80 BYTE))
+                           *
+ERROR at line 1:
+ORA-01430: column being added already exists in table 
+
+
+
+Comment created.
+
+* * * * * * *
+Table NCI_LAB_LOAD_CTL
+* * * * * * *
+
+Table altered.
+
+
+Comment created.
+
+* * * * * * *
+Table NCI_LAB_VALID_PATIENTS
+* * * * * * *
+
+Table dropped.
+
+
+Table created.
+
+
+Index created.
+
+
+Index created.
+
+
+Index created.
+
+
+Synonym dropped.
+
+
+Synonym created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+...Altering Indexes...
+* * * * * * *
+Index NCI_LABS_ERR1 on Table NCI_LABS
+* * * * * * *
+DROP INDEX NCI_LABS_ERR1
+           *
+ERROR at line 1:
+ORA-01418: specified index does not exist 
+
+
+
+Index created.
+
+* * * * * * *
+Index NCI_LABS_INX3 on Table NCI_LABS
+* * * * * * *
+DROP INDEX NCI_LABS_INX3
+           *
+ERROR at line 1:
+ORA-01418: specified index does not exist 
+
+
+
+Index created.
+
+...Altering Views...
+* * * * * * *
+View NCI_CDW_LAB_MAP_CROSSREF
+* * * * * * *
+
+Warning: View created with compilation errors.
+
+* * * * * * *
+View NCI_LABS_DCM_QUESTS_VW
+* * * * * * *
+
+View created.
+
+* * * * * * *
+View NCI_LAB_LOAD_STUDY_CTLS_VW
+* * * * * * *
+
+Warning: View created with compilation errors.
+
+* * * * * * *
+View NCI_STUDY_ALL_DCMS_EVENTS_VW
+* * * * * * *
+
+View created.
+
+...Altering Procedures
+* * * * * * *
+Procedure AUTOMATE_BDL
+* * * * * * *
+
+Package created.
+
+
+Package body created.
+
+* * * * * * *
+Procedure LOAD_LAB_RESULTS
+* * * * * * *
+
+Warning: Procedure created with compilation errors.
+
+* * * * * * *
+Procedure LOAD_LAB_RESULTS_UPD
+* * * * * * *
+
+Warning: Procedure created with compilation errors.
+
+...Altering Packages
+* * * * * * *
+Package INSERT_LAB_DATA
+* * * * * * *
+
+Package created.
+
+
+Package body created.
+
+* * * * * * *
+Package CDW_DATA_TRANSFER_V3
+* * * * * * *
+
+Package created.
+
+
+Warning: Package Body created with compilation errors.
+
+
+FINISHED!
+
