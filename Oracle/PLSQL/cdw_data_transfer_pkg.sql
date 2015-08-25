@@ -1,8 +1,8 @@
-CREATE OR REPLACE PACKAGE cdw_data_transfer_v3 AS
+CREATE OR REPLACE PACKAGE OPS$BDL.cdw_data_transfer_v3 AS
   -- Global Package Variables.
   Labs_Count      Number;
   Status$Flag     Varchar2(1) := NULL;  --Processing Status Flag used in Update_After_Batch processing. (PRC 8/8/13)
-  
+
   Function Find_LabMap_Version(i_StudyID in Varchar2, i_Laboratory in Varchar2) Return Varchar2;
   Function Find_Lab_Question(i_StudyID in Varchar2, i_Test_ID in Varchar2, i_Lab_Code in Varchar2) Return Varchar2;
   Function Cnt_Lab_Test_Maps(i_StudyID in Varchar2, i_Test_ID in Varchar2, i_Lab_Code in Varchar2) Return Number;
@@ -17,7 +17,7 @@ CREATE OR REPLACE PACKAGE cdw_data_transfer_v3 AS
   Procedure LLI_Processing;
   PROCEDURE prepare_cdw_labs;
   Procedure AssignPatientsToStudies;
-  Procedure Identify_Additional_Labs_Old;
+ 
   Procedure Identify_Additional_Labs;
   PROCEDURE process_lab_data;
   Procedure Process_Batch_Load;
@@ -40,8 +40,7 @@ CREATE OR REPLACE PACKAGE cdw_data_transfer_v3 AS
 END cdw_data_transfer_v3;
 /
 
-
-CREATE OR REPLACE PACKAGE BODY cdw_data_transfer_v3 AS
+CREATE OR REPLACE PACKAGE BODY OPS$BDL.cdw_data_transfer_v3 AS
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   /*     Author: Patrick Conrad- Ekagra Software Technologies                          */
   /*       Date: 10/21/03                                                              */
@@ -68,6 +67,10 @@ CREATE OR REPLACE PACKAGE BODY cdw_data_transfer_v3 AS
   /*                     any of the subsequent processes.                              */
   /*                  2) Moved procedure "identify_duplicate_records" from Package     */
   /*                     "insert_lab_data" to here.  More logically correct.           */
+  /*  MNB 08/14/2014: Made Changes to CHECK_SUBEVENT_NUMBERS procedure. Removed the    */
+  /*                  new view and used the old view instead.                          */
+  /*  MNB 08/25/2015: Made Changes to GET_PROCESS_LOAD_LABS. Added a call to           */
+  /*                  Report_Errors at the end.
   /*                                                                                   */
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * - - - - */
 
@@ -470,7 +473,7 @@ CREATE OR REPLACE PACKAGE BODY cdw_data_transfer_v3 AS
      Log_Util.LogMessage('PLDET - About to delete old records from NCI_STUDY_LABDCM_EVENTS_TB.');
 
      Delete from NCI_STUDY_LABDCM_EVENTS_TB;
-     
+
      Log_Util.LogMessage('PLDET - '||to_char(SQL%RowCount)||' records removed from NCI_STUDY_LABDCM_EVENTS_TB.');
 
      Commit;
@@ -487,44 +490,44 @@ CREATE OR REPLACE PACKAGE BODY cdw_data_transfer_v3 AS
      Log_Util.LogMessage('PLDET - Finished Populate_LABDCM_EVENTS_Table.');
 
      Log_Util.LogMessage('PLDET - About to delete old records from NCI_STUDY_DCMS_VW_TB.');
-     
+
      Delete from NCI_STUDY_DCMS_VW_TB;
-     
+
      Log_Util.LogMessage('PLDET - '||to_char(SQL%RowCount)||' records removed from NCI_STUDY_DCMS_VW_TB.');
 
      Commit;
 
      Log_Util.LogMessage('PLDET - About to populate table NCI_STUDY_DCMS_VW_TB.');
      INSERT INTO NCI_STUDY_DCMS_VW_TB
-     SELECT DISTINCT dm.clinical_study_id oc_study, d.NAME dcm_name, 
-                     d.subset_name, dq.question_name, cpe.NAME cpe_name, 
-                     r.repeat_sn, r.default_value_text oc_lab_question 
-                FROM dcms d, 
-                     dcm_questions dq, 
-                     dcm_ques_repeat_defaults r, 
-                     dci_modules dm, 
-                     clinical_planned_events cpe, 
-                     dci_book_pages dbp, 
-                     dci_books db 
-               WHERE dq.dcm_question_id = r.dcm_question_id 
-                 AND dq.dcm_que_dcm_subset_sn = r.dcm_subset_sn 
-                 AND dq.dcm_que_dcm_layout_sn = r.dcm_layout_sn 
-                 AND d.dcm_id = dq.dcm_id 
-                 AND d.dcm_subset_sn = dq.dcm_que_dcm_subset_sn 
-                 AND d.dcm_layout_sn = dq.dcm_que_dcm_layout_sn 
-                 AND dm.dcm_id = d.dcm_id 
-                 AND dm.dcm_subset_sn = d.dcm_subset_sn 
-                 AND dm.dcm_layout_sn = d.dcm_layout_sn 
-                 AND dbp.dci_id = dm.dci_id 
-                 AND dbp.clin_plan_eve_id = cpe.clin_plan_eve_id 
-                 AND db.dci_book_id = dbp.dci_book_id 
+     SELECT DISTINCT dm.clinical_study_id oc_study, d.NAME dcm_name,
+                     d.subset_name, dq.question_name, cpe.NAME cpe_name,
+                     r.repeat_sn, r.default_value_text oc_lab_question
+                FROM dcms d,
+                     dcm_questions dq,
+                     dcm_ques_repeat_defaults r,
+                     dci_modules dm,
+                     clinical_planned_events cpe,
+                     dci_book_pages dbp,
+                     dci_books db
+               WHERE dq.dcm_question_id = r.dcm_question_id
+                 AND dq.dcm_que_dcm_subset_sn = r.dcm_subset_sn
+                 AND dq.dcm_que_dcm_layout_sn = r.dcm_layout_sn
+                 AND d.dcm_id = dq.dcm_id
+                 AND d.dcm_subset_sn = dq.dcm_que_dcm_subset_sn
+                 AND d.dcm_layout_sn = dq.dcm_que_dcm_layout_sn
+                 AND dm.dcm_id = d.dcm_id
+                 AND dm.dcm_subset_sn = d.dcm_subset_sn
+                 AND dm.dcm_layout_sn = d.dcm_layout_sn
+                 AND dbp.dci_id = dm.dci_id
+                 AND dbp.clin_plan_eve_id = cpe.clin_plan_eve_id
+                 AND db.dci_book_id = dbp.dci_book_id
                  AND db.dci_book_status_code = 'A';
 
      Log_Util.LogMessage('PLDET - '||to_char(SQL%RowCount)||' records inserted into NCI_STUDY_DCMS_VW_TB.');
 
      Commit; -- PRC - 01/17/2012: Added commit to reduce RollBack;
 
-     Log_Util.LogMessage('PLDET - Finished Populate_LABDCM_EVENTS_Table.');                 
+     Log_Util.LogMessage('PLDET - Finished Populate_LABDCM_EVENTS_Table.');
 
   End;
 
@@ -904,7 +907,7 @@ CREATE OR REPLACE PACKAGE BODY cdw_data_transfer_v3 AS
 
        update nci_labs n
           set load_flag    = 'W',
-	      Error_reason = 'Records should be loaded as updates.'
+          Error_reason = 'Records should be loaded as updates.'
         where load_flag = 'L'    -- Change N to L, because of LLI Processing.
           and exists
              (SELECT 'X'
@@ -1116,7 +1119,7 @@ CREATE OR REPLACE PACKAGE BODY cdw_data_transfer_v3 AS
           End;
           End Loop;
        Else
-       
+
           x_cnt := 0;
           update nci_labs n
               set load_flag    = xSuccessFlag
@@ -1161,11 +1164,11 @@ CREATE OR REPLACE PACKAGE BODY cdw_data_transfer_v3 AS
                       AND rv.REPEAT_SN=rp.REPEAT_SN
                       and Rp.END_TS = to_date(3000000, 'J')
                       and Rv.END_TS = to_date(3000000, 'J'));
-       
+
           x_cnt := x_cnt + SQL%RowCount;
-                 
+
        End If;
-       
+
        Log_Util.LogMessage('UABL - '||to_char(x_cnt)||' rows successfully marked '||
                             xSuccessReason||' for "'||xSearchFlag||
                             '" records found loaded to OC.');
@@ -1192,13 +1195,13 @@ CREATE OR REPLACE PACKAGE BODY cdw_data_transfer_v3 AS
        Log_Util.LogSetName('UPDATE_LOADED_' || to_char(sysdate, 'YYYYMMDD-HH24MI'),'LABLOAD');
     End If;
     Log_Util.LogMessage('UABL - Starting Update_After_Batch_Load.');
-    
-    Case Status$Flag 
+
+    Case Status$Flag
        When 'L' Then Update_STATUS_FLAG('L','C','Records Loaded and Verified.','"L" records failed to be verified as loaded.');
        When 'S' Then Update_STATUS_FLAG('S','C','Soft-Delete Records Reloaded and Verified .','"S" records failed to be verified as loaded.');
        When 'D' Then Update_STATUS_FLAG('D','U','Record loaded as update.','"D" records failed to be verified as loaded as update.');
        When 'W' Then Update_STATUS_FLAG('W', 'U', 'Record loaded as update.','"W" records failed to be verified as loaded as update.');
-       ELSE 
+       ELSE
           Begin
              Update_STATUS_FLAG('L','C','Records Loaded and Verified.','"L" records failed to be verified as loaded.');
              Update_STATUS_FLAG('S','C','Soft-Delete Records Reloaded and Verified .','"S" records failed to be verified as loaded.');
@@ -1237,8 +1240,12 @@ Procedure Check_SubEvent_Numbers is
   /*   Date: 06/27/07                                                                      */
   /*    Mod: Added clause to primary select Loop, to only look at studies that require the */
   /*         Lab Event to be calculated.                                                   */
+  /* Author: Milind Bendigeri - Leidos Biomedical Inc                                      */
+  /*   Date: 08/14/2014
+  /*    Changed CHKSUBEVNT procedure to mimic the Script 2 exactly . This was to take care */
+  /*  of the issue that the code was taking a long time to complete.                       */
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-      v_errm          Varchar2(100);
+            v_errm          Varchar2(100);
       V_Max_SubeventN Number;
       v_dummy         varchar2(1);
       v_hold_event    varchar2(20);
@@ -1247,14 +1254,46 @@ Procedure Check_SubEvent_Numbers is
 
       Cursor Get_Event (in_study varchar2, in_Panel varchar2, in_Subset Varchar2) is
          select distinct CPE_NAME, display_sn
-           from NCI_DFACT_DCM_QST_REPDEF_VW  C
+           from (   SELECT cs.study oc_study,     cs.clinical_study_id,
+       d.NAME dcm_name,       d.subset_name,
+       dq.question_name,      cpe.NAME cpe_name,
+       r.repeat_sn,           r.default_value_text oc_lab_question,
+       dbp.display_sn
+  FROM dcms d,
+       dcm_questions dq,
+       dcm_ques_repeat_defaults r,
+       dci_modules dm,
+       clinical_planned_events cpe,
+       dci_book_pages dbp,
+       dci_books db,
+       clinical_studies cs,
+       clinical_study_versions csv
+ WHERE csv.clinical_study_id = cs.clinical_study_id
+   AND cpe.CLIN_STUDY_ID = csv.CLINICAL_STUDY_ID
+   AND cpe.CLIN_STUDY_VERSION_ID = csv.CLINICAL_STUDY_VERSION_ID
+   AND db.CLINICAL_STUDY_ID = cs.CLINICAL_STUDY_ID
+   AND db.dci_book_status_code = 'A'
+   AND db.DEFAULT_FLAG = 'Y'
+   AND dbp.clin_plan_eve_id = cpe.clin_plan_eve_id
+   AND dbp.dci_book_id = db.dci_book_id
+   AND dbp.CLINICAL_STUDY_ID = csv.CLINICAL_STUDY_ID
+   AND dm.dci_id = dbp.dci_id
+   AND d.dcm_id = dm.dcm_id
+   AND d.dcm_subset_sn = dm.dcm_subset_sn
+   AND d.dcm_layout_sn = dm.dcm_layout_sn
+   AND d.dcm_id = dq.dcm_id
+   AND d.dcm_subset_sn = dq.dcm_que_dcm_subset_sn
+   AND d.dcm_layout_sn = dq.dcm_que_dcm_layout_sn
+   AND r.dcm_question_id (+) = dq.dcm_question_id
+   AND r.dcm_subset_sn (+) = dq.dcm_que_dcm_subset_sn
+   AND r.dcm_layout_sn (+) = dq.dcm_que_dcm_layout_sn)  C
           where c.oc_study = in_study
             and c.DCM_name = in_panel
             and C.Subset_name = in_subset
             order by display_sn;
 
    Begin
-    If Log_Util.Log$LogName is null Then
+      If Log_Util.Log$LogName is null Then
        Log_Util.LogSetName('CHCKSUBEVNT_' || to_char(sysdate, 'YYYYMMDD-HH24MI'),'LABLOAD');
     End If;
 
@@ -1273,6 +1312,7 @@ Procedure Check_SubEvent_Numbers is
                           where c.oc_study = a.oc_study
                             and find_event = 'Y')) Loop
 
+         Log_Util.LogMessage('CHKSUBEVNT - Open Cursor With '||Cr1.oc_study||'/'||Cr1.OC_Lab_Panel||'/'||Cr1.OC_Lab_Subset);
          Open Get_event(Cr1.oc_study, Cr1.OC_Lab_Panel, Cr1.OC_Lab_Subset);
 
          v_max_subEventN := 100;
@@ -1288,6 +1328,10 @@ Procedure Check_SubEvent_Numbers is
                      ) Loop
 
             Begin
+               Log_Util.LogMessage('CHKSUBEVNT - Inside CR2 Loop with:');
+               Log_Util.LogMessage('           - Study-'||Cr1.oc_study||' Panel-'||Cr1.OC_Lab_Panel||
+                                               ' Subset-'||Cr1.OC_Lab_Subset||' DateTime-'||Cr2.sample_datetime||
+                                               ' Patient-'||Cr1.OC_patient_pos);
                -- Does this study,patient,lab exist in OC for this date
                -- This checks the ACTIVE record
                Select CLIN_PLAN_EVE_NAME
@@ -1305,6 +1349,8 @@ Procedure Check_SubEvent_Numbers is
                       substr(nvl(dcm_time,'000000'),1,4) = cr2.sample_datetime
                   and a.END_TS = to_date(3000000, 'J');
 
+               Log_Util.LogMessage('CHKSUBEVNT - Date Exists, Updating Event with '||d_hold_event);
+
                UPDATE NCI_LABS N
                   SET OC_LAB_EVENT = d_hold_Event
                 WHERE oc_study = cr1.oc_study
@@ -1314,17 +1360,17 @@ Procedure Check_SubEvent_Numbers is
                   and sample_datetime = cr2.sample_datetime
                   and load_flag = 'L';
 
-
             Exception
                When No_data_Found Then
                   Begin
+                     Log_Util.LogMessage('CHKSUBEVNT - Date does not exist, Checking Soft-delete');
                      -- Check again to see if the Sample Date once existed and was soft-deleted
                      -- pick the first EVENT where it was soft-deleted.
                      Select distinct CLIN_PLAN_EVE_NAME
                        into d_hold_event
                        from received_dcms a,
                             dcms b,
-                            NCI_DFACT_DCM_QST_REPDEF_VW  c
+                            NCI_STUDY_ALL_DCM_EVENTS2_VW  c
                       where a.dcm_id = b.dcm_id
                         and a.DCM_SUBSET_SN = b.DCM_SUBSET_SN
                         and a.DCM_layout_SN = b.DCM_layout_SN
@@ -1341,7 +1387,7 @@ Procedure Check_SubEvent_Numbers is
                         and c.display_sn = (select min(c.display_sn)
                                               from received_dcms a,
                                                    dcms b,
-                                                   NCI_DFACT_DCM_QST_REPDEF_VW  c
+                                                   NCI_STUDY_ALL_DCM_EVENTS2_VW  c
                                              where a.dcm_id = b.dcm_id
                                                and a.DCM_SUBSET_SN = b.DCM_SUBSET_SN
                                                and a.DCM_layout_SN = b.DCM_layout_SN
@@ -1356,6 +1402,7 @@ Procedure Check_SubEvent_Numbers is
                                                and c.subset_name = b.SUBSET_NAME
                                                and c.cpe_name = a.clin_plan_eve_name);
 
+                     Log_Util.LogMessage('CHKSUBEVNT - soft delete Exists, Updating Event with '||d_hold_event);
                      UPDATE NCI_LABS N
                         SET OC_LAB_EVENT = d_hold_Event
                       WHERE oc_study = cr1.oc_study
@@ -1367,12 +1414,15 @@ Procedure Check_SubEvent_Numbers is
 
                   Exception
                      When no_data_found then
+                        Log_Util.LogMessage('CHKSUBEVNT - Soft Delete does not exist, Getting new Subevent');
+                        Log_Util.LogMessage('           - v_max_subeventN = '||v_max_SubEventN);
                         -- This will cause a new event when above select has no data
                         If v_max_SubEventN < 95 Then
 
                            -- Increment the max Subevent incase there are more labs for patient
                            v_max_subEventN := v_Max_SubEventN + 1;
 
+                          Log_Util.LogMessage('incrementing v_max_subeventN to '||v_max_SubEventN);
                            -- Set the Event in the Lab Record.
                            UPDATE NCI_LABS N
                               SET OC_LAB_EVENT = v_hold_Event
@@ -1386,7 +1436,9 @@ Procedure Check_SubEvent_Numbers is
                         Else
 
                            Loop
-
+                              Log_Util.LogMessage('CHKSUBEVNT - Inside second loop: First Subevent full at '||v_max_SubEventN);
+                              Log_Util.LogMessage('CHKSUBEVNT - Inside second loop: Check Event/Subevent.');
+ 
                               Fetch Get_Event Into v_Hold_Event, v_hold_dsn;
                               If Get_Event%NOTFOUND Then
 
@@ -1409,6 +1461,8 @@ Procedure Check_SubEvent_Numbers is
                                   Exit;
 
                               End If;
+                              
+                              Log_Util.LogMessage('CHKSUBEVNT - Inside second loop: Found Event '||v_Hold_Event);
 
                               -- Check the current maximum SubEvent Number
                               select nvl(max(subevent_number),0)
@@ -1424,6 +1478,7 @@ Procedure Check_SubEvent_Numbers is
                                  and b.name = cr1.oc_lab_panel
                                  and a.CLIN_PLAN_EVE_NAME = v_Hold_Event;
 
+                              Log_Util.LogMessage('CHKSUBEVNT - Inside second loop: subevent_number = '||v_max_SubEventN);
 
                               Exit When v_max_subEventN < 95;
 
@@ -1436,6 +1491,8 @@ Procedure Check_SubEvent_Numbers is
                            If v_max_SubEventN < 95 Then
                               -- Increment the max Subevent incase there are more labs for patient
                               v_max_subEventN := v_Max_SubEventN + 1;
+                          
+                              Log_Util.LogMessage('found event slot, incremeting v_max_subeventN to '||v_max_SubEventN);
 
                               -- Set the Event in the Lab Record.
                               UPDATE NCI_LABS N
@@ -1481,6 +1538,8 @@ Procedure Check_SubEvent_Numbers is
       End Loop;
 
       Log_Util.LogMessage('CHKSUBEVNT - Check SubEvent Numbers Finished.');
+
+   Commit;
 
    End; -- Check_SubEvent_NUmbers
 
@@ -2361,6 +2420,8 @@ Procedure Check_SubEvent_4Constants is
   /*               loading addtional records, same as above, with the option to  */
   /*               only process upto and excluding the actual load.              */
   /*               'WAIT_PROC' is new parameter                                  */
+  /* MNB 08/25/15: Added a Call to a procedure to generate Stats and Error       */
+  /*               report.
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
      v_MISCount       Number := 0;
@@ -2598,7 +2659,7 @@ Procedure Check_SubEvent_4Constants is
                load_lab_results('S',v_AutoLoad_study);
 
                Log_Util.LogMessage('GPLL - About to call "cdw_data_transfer_v3.Process_Batch_Load"');
-               
+
                Status$Flag := 'S';
                cdw_data_transfer_v3.Process_Batch_Load;
             End If;
@@ -2718,6 +2779,7 @@ Procedure Check_SubEvent_4Constants is
      Log_Util.LogMessage('GPLL - Finished "GET_PROCESS_LOAD_LABS".');
 
      Commit;
+	 report_errors(sysdate); -- Creates the Stats and Error Report in /tmp/ErrRpt.txt
 
   End Get_Process_Load_Labs;
 
@@ -3205,112 +3267,7 @@ Procedure Check_SubEvent_4Constants is
   End;
 
 
-  Procedure Identify_Additional_Labs_old is
-  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-  /* This section is used to added additional records to NCI_LABS for processing */
-  /* by identifying new study/patients relationships for existin patients.  Also */
-  /* resets those errors held in the automatic error reset control table.        */
-  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-      Hold_unit  nci_labs.unit%type;
-      X_Cnt      Number := 0;
-  Begin
-     process_error_labs;  -- added 10/19/2005
-
-     AssignPatientsToStudies;
-
-     -- Generate additional lab records for patient on more than one study.or on same study more than once.
-     Begin
-        Log_Util.LogMessage('IAL - Starting Additional Record Inserts');
-
-        For x_Rec in (select distinct
-                             NULL RECORD_ID         ,PATIENT_ID
-                             ,SAMPLE_DATETIME       ,TEST_COMPONENT_ID
-                             ,b.LABORATORY          ,LABTEST_NAME
-                             ,LAB_GRADE             ,RESULT
-                             ,NULL UNIT             ,NORMAL_VALUE
-                             ,PANEL_NAME            ,PATIENT_NAME
-                             ,COMMENTS              ,NULL OC_LAB_PANEL
-                             ,NULL OC_LAB_QUESTION  ,NULL OC_LAB_EVENT
-                             ,T.PT OC_PATIENT_POS   ,NULL LOAD_DATE
-                             ,'N' LOAD_FLAG         ,RECEIVED_DATE
-                             ,NULL DATE_CREATED     ,NULL DATE_MODIFIED
-                             ,NULL CREATED_BY       ,NULL MODIFIED_BY
-                             ,TEST_CODE             ,CDW_RESULT_ID
-                             ,T.STUDY OC_STUDY      ,NULL ERROR_REASON
-                             ,NULL OC_LAB_SUBSET
-                        from NCI_LAB_VALID_PATIENTS T, -- from patient_id_ptid_vw T, -- prc 10/20/04
-                             nci_labs b
-                       WHERE T.PT_ID = b.PATIENT_ID
-                         and t.laboratory = b.laboratory
-                         and b.cdw_result_id is not null
-                      MINUS
-                      select NULL RECORD_ID         ,PATIENT_ID
-                             ,SAMPLE_DATETIME        ,TEST_COMPONENT_ID
-                             ,LABORATORY             ,LABTEST_NAME
-                             ,LAB_GRADE              ,RESULT
-                             ,NULL UNIT              ,NORMAL_VALUE
-                             ,PANEL_NAME             ,PATIENT_NAME
-                             ,COMMENTS               ,NULL OC_LAB_PANEL
-                             ,NULL OC_LAB_QUESTION   ,NULL OC_LAB_EVENT
-                             ,OC_PATIENT_POS         ,NULL LOAD_DATE
-                             ,'N' LOAD_FLAG          ,RECEIVED_DATE
-                             ,NULL DATE_CREATED      ,NULL DATE_MODIFIED
-                             ,NULL CREATED_BY        ,NULL MODIFIED_BY
-                             ,TEST_CODE              ,CDW_RESULT_ID
-                             ,OC_STUDY               ,NULL ERROR_REASON
-                             ,NULL OC_LAB_SUBSET
-                         from nci_labs b)  LOOP
-        Begin
-           X_Cnt := X_Cnt + 1;
-
-           Begin
-              Hold_Unit := Null;
-
-              For y_Rec in (select unit
-                              from nci_labs
-                             where cdw_result_id = x_rec.cdw_result_id
-                               and unit is not null
-                             order by record_id) Loop
-
-                 Hold_Unit := Y_Rec.Unit;
-              End Loop;
-
-           Exception
-              When No_Data_Found Then
-                 Hold_Unit := NULL;
-           End;
-
-           Insert into NCI_LABS
-                  (RECORD_ID,      PATIENT_ID,       SAMPLE_DATETIME,       TEST_COMPONENT_ID,
-                   LABORATORY,     LABTEST_NAME,     LAB_GRADE,             RESULT,
-                   UNIT,           NORMAL_VALUE,     PANEL_NAME,            PATIENT_NAME,
-                   COMMENTS,       OC_LAB_PANEL,     OC_LAB_QUESTION,       OC_LAB_EVENT,
-                   OC_PATIENT_POS, LOAD_DATE,        LOAD_FLAG,             RECEIVED_DATE,
-                   DATE_CREATED,   DATE_MODIFIED,    CREATED_BY,            MODIFIED_BY,
-                   TEST_CODE,      CDW_RESULT_ID,    OC_STUDY,              ERROR_REASON,
-                   OC_LAB_SUBSET)
-           Values (X_Rec.RECORD_ID,      X_Rec.PATIENT_ID,    X_Rec.SAMPLE_DATETIME, X_Rec.TEST_COMPONENT_ID,
-                   X_Rec.LABORATORY,     X_Rec.LABTEST_NAME,  X_Rec.LAB_GRADE,       X_Rec.RESULT,
-                   Hold_Unit,            X_Rec.NORMAL_VALUE,  X_Rec.PANEL_NAME,      X_Rec.PATIENT_NAME,
-                   X_Rec.COMMENTS,       X_Rec.OC_LAB_PANEL,  X_Rec.OC_LAB_QUESTION, X_Rec.OC_LAB_EVENT,
-                   X_Rec.OC_PATIENT_POS, X_Rec.LOAD_DATE,     X_Rec.LOAD_FLAG,       X_Rec.RECEIVED_DATE,
-                   X_Rec.DATE_CREATED,   X_Rec.DATE_MODIFIED, X_Rec.CREATED_BY,      X_Rec.MODIFIED_BY,
-                   X_Rec.TEST_CODE,      X_Rec.CDW_RESULT_ID, X_Rec.OC_STUDY,        X_Rec.ERROR_REASON,
-                   X_Rec.OC_LAB_SUBSET);
-        End;
-        End loop;
-
-        Log_Util.LogMessage('IAL - Finished Additional Record Inserts.');
-
-     End;
-
-     Log_Util.LogMessage('IAL - Generated additional '||to_char(X_Cnt)||
-                             ' lab records for patients on more than one study, or on same study more than once.');
-  End Identify_Additional_Labs_Old;
-
+ 
   Procedure Identify_Additional_Labs is
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
   /* This section is used to added additional records to NCI_LABS for processing */
@@ -3349,15 +3306,15 @@ Procedure Check_SubEvent_4Constants is
 
            For x_Rec in (SELECT distinct b.STUDY, b.PT, b.PT_ID, b.LABORATORY, a.CDW_RESULT_ID
                            from NCI_LABS a,
-	                        NCI_LAB_VALID_PATIENTS b
-		          WHERE b.PT_ID = y_Rec.PT_ID
-			    and a.PATIENT_ID = b.PT_ID
-			    and a.LABORATORY = b.LABORATORY
-			    and a.CDW_RESULT_ID is not null
-		         MINUS
-		         SELECT nvl(OC_STUDY,'~'), nvl(OC_PATIENT_POS,'~'), PATIENT_ID, LABORATORY, CDW_RESULT_ID
-		           from NCI_LABS
-		          where PATIENT_ID = y_Rec.PT_ID) Loop
+                            NCI_LAB_VALID_PATIENTS b
+                  WHERE b.PT_ID = y_Rec.PT_ID
+                and a.PATIENT_ID = b.PT_ID
+                and a.LABORATORY = b.LABORATORY
+                and a.CDW_RESULT_ID is not null
+                 MINUS
+                 SELECT nvl(OC_STUDY,'~'), nvl(OC_PATIENT_POS,'~'), PATIENT_ID, LABORATORY, CDW_RESULT_ID
+                   from NCI_LABS
+                  where PATIENT_ID = y_Rec.PT_ID) Loop
 
            Begin
               X_Cnt := X_Cnt + 1;
@@ -3571,7 +3528,7 @@ Procedure Check_SubEvent_4Constants is
                 SET UNIT = trim(UNIT)
               WHERE rowid = x_Rec.rowid;
              x_cnt := x_Cnt + SQL%RowCount;
-	  End Loop;
+      End Loop;
        End;
        Log_Util.LogMessage('PLD - '||to_char(x_Cnt)||' UNITS trimmed.');
        --
@@ -3592,7 +3549,7 @@ Procedure Check_SubEvent_4Constants is
               WHERE rowid = x_rec.rowid
                 and Length(result) > 20;
              x_cnt := x_Cnt + SQL%RowCount;
-	  End Loop;
+      End Loop;
        End;
        Log_Util.LogMessage('PLD - '||to_char(x_Cnt)||' rows updated for error "RESULT has length greater than 20 characters."');
        --
@@ -3613,7 +3570,7 @@ Procedure Check_SubEvent_4Constants is
               WHERE rowid = x_rec.rowid
                 and Length(NORMAL_VALUE) > 30;
              x_cnt := x_Cnt + SQL%RowCount;
-	  End Loop;
+      End Loop;
        End;
        Log_Util.LogMessage('PLD - '||to_char(x_Cnt)||' rows updated for error "NORMAL_VALUE to Long (> 30)"');
        --
@@ -3692,8 +3649,8 @@ Procedure Check_SubEvent_4Constants is
                 UPDATE NCI_LABS
                    SET LOAD_FLAG = 'E', ERROR_REASON = 'Sample date is invalid'
                  WHERE RowId = x_Rec.RowId;
-	        x_cnt3 := x_cnt3 + 1;
-	     End If;
+            x_cnt3 := x_cnt3 + 1;
+         End If;
           End Loop;
 
        End;
@@ -3830,13 +3787,13 @@ Procedure Check_SubEvent_4Constants is
              End If;
 
           EXCEPTION
-             when others then             
-             	If SQLCODE = -1422 Then 
-	     			Log_Util.LogMessage('PLD - ERROR: Date Control Values for Study: "'|| I_Rec.OC_STUDY||'" has duplicate Control Record (NCI_LAB_LOAD_CTL).');
-              	Else
-                	Log_Util.LogMessage('PLD - WARNING: Unexpected ERROR Occurred.');
-                	Log_Util.LogMessage('PLD - RPED - Error Encountered: ' || SQLCODE);
-                	Log_Util.LogMessage('PLD - RPED - Error Message: ' || SQLERRM);
+             when others then
+                 If SQLCODE = -1422 Then
+                 Log_Util.LogMessage('PLD - ERROR: Date Control Values for Study: "'|| I_Rec.OC_STUDY||'" has duplicate Control Record (NCI_LAB_LOAD_CTL).');
+                  Else
+                    Log_Util.LogMessage('PLD - WARNING: Unexpected ERROR Occurred.');
+                    Log_Util.LogMessage('PLD - RPED - Error Encountered: ' || SQLCODE);
+                    Log_Util.LogMessage('PLD - RPED - Error Message: ' || SQLERRM);
                 End If;
           END;
 
@@ -4039,11 +3996,11 @@ Procedure Check_SubEvent_4Constants is
                           FROM NCI_CDW_LAB_MAP_CROSSREF M
                          WHERE oc_lab_question IS NOT NULL
                          GROUP BY M.test_id, M.laboratory, M.Map_VERSION
-                        HAVING COUNT(DISTINCT M.OC_LAB_QUESTION) > 1	) Loop
+                        HAVING COUNT(DISTINCT M.OC_LAB_QUESTION) > 1    ) Loop
 
              UPDATE NCI_LABS N
-	        SET LOAD_FLAG    = 'E',
-	            ERROR_REASON = 'Lab Test Component ID (' || X_Rec.test_id || ') is double-mapped.'
+            SET LOAD_FLAG    = 'E',
+                ERROR_REASON = 'Lab Test Component ID (' || X_Rec.test_id || ') is double-mapped.'
                WHERE Load_flag = 'N'
                  and TEST_COMPONENT_ID = X_Rec.Test_Id
                  and Laboratory = X_Rec.Laboratory
@@ -4052,7 +4009,7 @@ Procedure Check_SubEvent_4Constants is
                                 and a.map_version = X_rec.Map_Version);
 
              x_cnt := x_Cnt + SQL%RowCount;
-	  End Loop;
+      End Loop;
        End;
        Log_Util.LogMessage('PLD - '||to_char(SQL%RowCount)||' rows updated for error "Lab Test Component ID ( xxx ) is double-mapped".');
        --
@@ -4091,24 +4048,24 @@ Procedure Check_SubEvent_4Constants is
        Begin
           For x_Rec in (select rowid from nci_labs where load_flag = 'N') Loop
              update nci_labs n
-	        set load_flag = 'E' , error_reason = 'OC_Lab_Question on more than one Panel'
-	      where rowid = x_rec.Rowid
-	        and exists (SELECT 'X'
-	                      FROM  NCI_STUDY_LABDCM_EVENTS_TB B
-	                      WHERE b.study = n.oc_study
-	                       and b.oc_lab_question = n.oc_lab_question
-	                       and b.oc_lab_question is not null
-	                       and display_sn = (select min(display_sn)
-	                                           from  NCI_STUDY_LABDCM_EVENTS_TB a
-	                                          where a.study = b.study
-	                                            and a.dcm_name = b.dcm_NAME
-	                                            and a.subset_name = b.subset_name
-	                                            and a.question_name = b.question_name
-	                                            and a.repeat_sn = b.repeat_sn
-	                                            and a.oc_lab_question = b.oc_lab_question)
+            set load_flag = 'E' , error_reason = 'OC_Lab_Question on more than one Panel'
+          where rowid = x_rec.Rowid
+            and exists (SELECT 'X'
+                          FROM  NCI_STUDY_LABDCM_EVENTS_TB B
+                          WHERE b.study = n.oc_study
+                           and b.oc_lab_question = n.oc_lab_question
+                           and b.oc_lab_question is not null
+                           and display_sn = (select min(display_sn)
+                                               from  NCI_STUDY_LABDCM_EVENTS_TB a
+                                              where a.study = b.study
+                                                and a.dcm_name = b.dcm_NAME
+                                                and a.subset_name = b.subset_name
+                                                and a.question_name = b.question_name
+                                                and a.repeat_sn = b.repeat_sn
+                                                and a.oc_lab_question = b.oc_lab_question)
                              having count(*) > 1);
              x_cnt := x_Cnt + SQL%RowCount;
-	  End Loop;
+      End Loop;
        End;
        Log_Util.LogMessage('PLD - '||to_char(SQL%RowCount)||' rows updated for error "OC_Lab_Question on more than one Panel".');
        --
@@ -4178,11 +4135,11 @@ Procedure Check_SubEvent_4Constants is
        Begin
           For x_Rec in (select rowid from nci_labs where load_flag = 'N') Loop
              UPDATE NCI_LABS
-	        SET LOAD_FLAG = 'E', ERROR_REASON = 'Lab Test is unmapped'
-	      WHERE RowId = x_Rec.RowId
-	        and OC_LAB_QUESTION IS NULL;
+            SET LOAD_FLAG = 'E', ERROR_REASON = 'Lab Test is unmapped'
+          WHERE RowId = x_Rec.RowId
+            and OC_LAB_QUESTION IS NULL;
               x_cnt := x_cnt + 1;
-	  End Loop;
+      End Loop;
        End;
        Log_Util.LogMessage('PLD - '||to_char(x_cnt)||' rows updated for error "Lab Test is unmapped".');
        --
@@ -4273,7 +4230,7 @@ Procedure Check_SubEvent_4Constants is
                                V.SUBSET_NAME = N.OC_LAB_SUBSET AND
                                V.DCM_NAME = N.OC_LAB_PANEL);
               x_cnt := x_cnt + SQL%RowCount;
-	  End Loop;
+      End Loop;
        End;
        Log_Util.LogMessage('PLD - '||to_char(x_cnt)||' rows updated for error "Invalid OC question used in mapping".');
        --
@@ -4307,7 +4264,7 @@ Procedure Check_SubEvent_4Constants is
                              Group by d.name, d.dcm_id, d.subset_name -- prc 04/05/2004 : Count Distinct DCI NAME
                             Having count(distinct dc.name) > 1); -- prc 04/05/2004 : Count Distinct DCI NAME
              x_cnt := x_Cnt + SQL%RowCount;
-	  End Loop;
+      End Loop;
        End;
        Log_Util.LogMessage('PLD - '||to_char(SQL%RowCount)||' rows updated for error "Lab Panel and Subset have Multiple DCIs".');
        --
@@ -4333,7 +4290,7 @@ Procedure Check_SubEvent_4Constants is
                                and dc.COLLECT_TIME_FLAG = 'Y' -- prc 10/20/2003:  Only look at DCIs requiring TIME collection
                             );
              x_cnt := x_Cnt + SQL%RowCount;
-	  End Loop;
+      End Loop;
        End;
        Log_Util.LogMessage('PLD - '||to_char(SQL%RowCount)||' rows updated for error "DCI requires time".');
        --
@@ -4363,7 +4320,7 @@ Procedure Check_SubEvent_4Constants is
                        AND dc.dci_status_code = 'A'
                        and b.DCI_BOOK_STATUS_CODE = 'A');
              x_cnt := x_Cnt + SQL%RowCount;
-	  End Loop;
+      End Loop;
        End;
        Log_Util.LogMessage('PLD - '||to_char(SQL%RowCount)||' rows updated for error "No Active DCI BOOK for Study".');
        --
@@ -4383,7 +4340,7 @@ Procedure Check_SubEvent_4Constants is
                              WHERE UPPER(N.UNIT) = UPPER(U.SOURCE)
                                and UPPER(N.LABORATORY) = UPPER(U.LABORATORY));
              x_cnt := x_Cnt + SQL%RowCount;
-	  End Loop;
+      End Loop;
        End;
        Log_Util.LogMessage('PLD - '||to_char(SQL%RowCount)||' UOMs updated with preferred values.');
        --
@@ -4402,7 +4359,7 @@ Procedure Check_SubEvent_4Constants is
                                   FROM NCI_UOMS U
                                  WHERE N.UNIT = U.VALUE); -- Removed "UPPER" function.  They must exactly match.
              x_cnt := x_Cnt + SQL%RowCount;
-	  End Loop;
+      End Loop;
        End;
        Log_Util.LogMessage('PLD - '||to_char(SQL%RowCount)||' rows updated for error "Invalid Unit of Measure".');
        --
@@ -4594,7 +4551,7 @@ Procedure Check_SubEvent_4Constants is
             where Rowid = x_Rec.RowId;
 
            X_Cnt := x_Cnt + SQL%RowCount;
-	End Loop;
+    End Loop;
      End;
      Log_Util.LogMessage('LLIP - '||to_char(X_Cnt)||' rows marked for REVIEW (Default defined)."');
 
@@ -4611,7 +4568,7 @@ Procedure Check_SubEvent_4Constants is
             where rowid = x_rec.RowId;
 
            X_Cnt := x_Cnt + SQL%RowCount;
-	End Loop;
+    End Loop;
      End;
      --If X_Cnt > 0 Then
         Log_Util.LogMessage('LLIP - '||to_char(X_Cnt)||' rows marked for LOAD (Default defined)."');
@@ -4691,5 +4648,3 @@ Procedure Check_SubEvent_4Constants is
 
 END cdw_data_transfer_v3;
 /
-
-
