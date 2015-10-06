@@ -25,7 +25,17 @@ r_before number(10);
 r_dbl_mapped number(10);
 r_subevent number(10);
 
-cursor c_err_recs(wclause varchar2) is select distinct oc_study, test_component_id, labtest_name, error_reason from (select distinct oc_study, test_component_id, labtest_name, error_reason from nci_labs where 
+r_stat_c number(10);
+r_stat_u number(10);
+r_stat_r number(10);
+r_stat_x number(10);
+r_stat_e number(10);
+r_stat_a number(10);
+r_stat_w number(10);
+r_stat_d number(10);
+
+
+cursor c_err_recs(wclause varchar2) is select distinct oc_study, test_component_id, labtest_name, error_reason from (select distinct oc_study, test_component_id, labtest_name, error_reason from nci_labs where
 load_flag = 'E' and date_created between starttime and endtime ) where (error_reason = wclause);
 
 TYPE errrec is TABLE of c_err_recs%ROWTYPE INDEX BY PLS_INTEGER;
@@ -33,13 +43,13 @@ errcollection errrec;
 cursor whrcl is select error_reason, oper, clause from error_rpt_ctl where oper is not null order by sequence;
 
 
-cursor c_rec_status is select load_flag, count(*) reccount from nci_labs where date_modified between starttime and endtime group by load_flag ; 
+cursor c_rec_status is select load_flag, count(*) reccount from nci_labs where date_modified between starttime and endtime group by load_flag ;
 sqlstmt varchar2(4000);
 status_legend varchar2(50);
- 
+
 begin
 
-select '''' ||error_reason||'''' into whrclause from error_rpt_ctl where oper is null; 
+select '''' ||error_reason||'''' into whrclause from error_rpt_ctl where oper is null;
 for i in whrcl loop
 whrclause := whrclause ||' '||i.clause || ' error_reason '||i.oper||' '||''''||i.error_reason||'''';
 end loop;
@@ -72,21 +82,40 @@ select count(*) into r_before from nci_labs where date_modified between starttim
 select count(*) into r_dbl_mapped from nci_labs where date_modified between starttime and endtime and load_flag = 'E' and error_reason like '%double-mapped%';
 select count(*) into r_subevent from nci_labs where date_modified between starttime and endtime and load_flag = 'E' and error_reason = 'SubEvent Has Reached 95+.  Lab Not Loaded.';
 
+select count(*) into r_stat_c from nci_labs where date_modified between starttime and endtime and load_flag = 'C';
+select count(*) into r_stat_u from nci_labs where date_modified between starttime and endtime and load_flag = 'U';
+select count(*) into r_stat_r from nci_labs where date_modified between starttime and endtime and load_flag = 'R';
+select count(*) into r_stat_x from nci_labs where date_modified between starttime and endtime and load_flag = 'X';
+select count(*) into r_stat_w from nci_labs where date_modified between starttime and endtime and load_flag = 'W';
+select count(*) into r_stat_d from nci_labs where date_modified between starttime and endtime and load_flag = 'D';
+select count(*) into r_stat_a from nci_labs where date_modified between starttime and endtime and load_flag = 'A';
+select count(*) into r_stat_e from nci_labs where date_modified between starttime and endtime and load_flag = 'E';
+
 utl_file.putf(file_hdl, 'Report Date: '||to_char(sysdate,'MM/DD/YYYY') ||'\n');
 utl_file.putf(file_hdl, 'LL Run Date: '||to_char(rptdate,'MM/DD/YYYY') ||'\n');
 utl_file.putf(file_hdl, 'Start Time : '|| to_char(starttime, 'MM/DD/YYYY HH24:MI:SS') || '\n' );
 utl_file.putf(file_hdl, 'End Time : '|| to_char(endtime, 'MM/DD/YYYY HH24:MI:SS') || '\n' );
 utl_file.putf(file_hdl, 'Time Taken: '|| timetaken || ' hours \n' );
 utl_file.putf(file_hdl,  'Total Records Read = '|| recstotal || '\n' );
-utl_file.putf(file_hdl,  'Records Loaded from CDW file = '||recsloaded ||'\n\n' );
-utl_file.putf(file_hdl,  'Records added for patients on more than 1 Study = '||recsadded ||'\n\n' );
-utl_file.putf(file_hdl, 'Total records processed in the NCI_LABS table = '||recsprocessed || '\n\n');
+utl_file.putf(file_hdl,  'Records Loaded from CDW file based on MRNs in C3D= '||recsloaded ||'\n\n' );
+utl_file.putf(file_hdl,  'Records duplicated for patients on more than 1 Study = '||recsadded ||'\n\n' );
+utl_file.putf(file_hdl, 'Total records processed in the NCI_LABS table = '||recsprocessed || '. This includes records loaded, records duplicated and records in Review Status that were moved to the cart by users.\n\n');
+
+utl_file.putf(file_hdl, r_stat_c || ' records were inserted in OC.\n\n');
+utl_file.putf(file_hdl, r_stat_u || ' records were updated in OC.\n\n');
+utl_file.putf(file_hdl, r_stat_r || ' records were put in Review Status.\n\n');
+utl_file.putf(file_hdl, r_stat_a || ' records were Archived.\n\n');
+utl_file.putf(file_hdl, r_stat_x || ' records were marked as Duplicates.\n\n');
+utl_file.putf(file_hdl, r_stat_d || ' records were same test in more than one panel.\n\n');
+utl_file.putf(file_hdl, r_stat_w || ' records were marked as Updates and are waiting to be processed.\n\n');
+utl_file.putf(file_hdl, r_stat_e || ' records were marked as Errors.\n\n');
+
 utl_file.putf(file_hdl, r_oth_labs ||' records were not loaded due to Studies not loading Other Labs.'|| '\n\n');
 utl_file.putf(file_hdl, r_unmapped ||' records were not loaded as the labs are unmapped.'||'\n\n');
 utl_file.putf(file_hdl, r_invalid_res || ' records were not loaded as the results were invalid.'||'\n\n');
 utl_file.putf(file_hdl, r_study_not_loading || ' records were not loaded as Study is not loading labs anymore.'||'\n\n');
 utl_file.putf(file_hdl, r_missing_event || ' records were not loaded as Update records were missing event and subevent.'||'\n\n');
-utl_file.putf(file_hdl, r_lab_not_defined || ' records were not loaded as Lab CDW not defined for Study.'||'\n\n');
+--utl_file.putf(file_hdl, r_lab_not_defined || ' records were not loaded as Lab CDW not defined for Study.'||'\n\n');
 utl_file.putf(file_hdl, r_after_off_study || ' records were not loaded as records are after Off Study Date.'||'\n\n');
 utl_file.putf(file_hdl, r_PreStudy_dt || ' records were not loaded as records have a Null Pre-Study Date.'||'\n\n');
 utl_file.putf(file_hdl, r_before || ' records were not loaded as records are before Pre-Study Date.'||'\n\n');
@@ -94,7 +123,7 @@ utl_file.putf(file_hdl, r_dbl_mapped ||' records were not loaded as they are dou
 utl_file.putf(file_hdl, r_subevent || ' records are not loaded as the Subevent has reached 95+.'||'\n\n');
 
 -- utl_file.putf(file_hdl,  'Records '||recsskipped ||'\n' );
-For i in c_rec_Status loop
+/* For i in c_rec_Status loop
 case i.load_flag
 when 'L' then status_legend := 'Ready to Load';
 When 'X' then status_legend := 'Duplicate Records.';
@@ -109,14 +138,10 @@ else status_legend := 'records with other status.';
 end case;
 utl_file.putf(file_hdl, 'There are '||i.reccount|| ' '|| status_legend||'\n\n');
 end loop;
-dbms_output.put_line ('B4 For Loop');
---
---For i in c_err_recs(whrclause)
---loop
---dbms_output.put_line ('In For Loop');
---utl_file.putf(file_hdl,  'OC_STUDY : '||i.oc_study ||', OC_LAB_EVENT: '||i.oc_lab_event || ', ERROR: '||i.error_reason||'\n\n' );
---end loop;\\
-sqlstmt := 'SELECT distinct oc_study, TEST_COMPONENT_ID, LABTEST_NAME, error_reason FROM NCI_LABS WHERE trunc(date_created) = to_date('||''''||rptdate||''''||') and load_flag = '||''''||'E'||''''||
+dbms_output.put_line ('B4 For Loop'); */
+
+
+sqlstmt := 'SELECT distinct oc_study, TEST_COMPONENT_ID, LABTEST_NAME, error_reason FROM NCI_LABS WHERE trunc(date_modified) = to_date('||''''||rptdate||''''||') and load_flag = '||''''||'E'||''''||
 ' and ( error_reason = '|| whrclause || ' order by oc_study, error_reason';
 dbms_output.put_line (sqlstmt);
 EXECUTE IMMEDIATE  sqlstmt BULK COLLECT into errcollection;
