@@ -46,6 +46,7 @@ cursor whrcl is select error_reason, oper, clause from error_rpt_ctl where oper 
 cursor c_rec_status is select load_flag, count(*) reccount from nci_labs where date_modified between starttime and endtime group by load_flag ;
 sqlstmt varchar2(4000);
 status_legend varchar2(50);
+dtime varchar2(50);
 
 begin
 
@@ -57,7 +58,8 @@ whrclause := whrclause ||')';
 dbms_output.put_line ('whrclause = '|| whrclause);
 select max(logname) into tlogname from message_logs where logname like 'LABLOAD_'||to_char(rptdate, 'YYYYMMDD')||'%' and logtext = 'GPLL - Processing Type is "FULL".';
 dbms_output.put_line (tlogname);
-file_hdl := UTL_FILE.FOPEN('LAB_DIR','ErrRpt.txt','W');
+file_hdl := UTL_FILE.FOPEN('REPORTS_DIR','ErrRpt.txt','W');
+select to_char(sysdate,'YYYYMMDDH24MI') into dtime from dual;
 select logdate into starttime from message_logs where logname like tlogname and logtext = 'GPLL - Beginning "GET_PROCESS_LOAD_LABS".';
 stime := to_char(starttime, 'HH24:MI:SS');
 select logdate into endtime from message_logs where logname like tlogname and logtext = 'GPLL - Finished "GET_PROCESS_LOAD_LABS".';
@@ -122,24 +124,6 @@ utl_file.putf(file_hdl, r_before || ' records were not loaded as records are bef
 utl_file.putf(file_hdl, r_dbl_mapped ||' records were not loaded as they are double mapped.'||'\n\n');
 utl_file.putf(file_hdl, r_subevent || ' records are not loaded as the Subevent has reached 95+.'||'\n\n');
 
--- utl_file.putf(file_hdl,  'Records '||recsskipped ||'\n' );
-/* For i in c_rec_Status loop
-case i.load_flag
-when 'L' then status_legend := 'Ready to Load';
-When 'X' then status_legend := 'Duplicate Records.';
-when 'R' then status_legend := 'Ready for Review.';
-When 'E' then status_legend := 'records which were not loaded.';
-when 'W' then status_legend := 'records which are Update Records.';
-when 'A' then status_legend := 'records which are Archived.';
-when 'D' then status_legend := 'records with same test in more than one panel.';
-when 'C' then status_legend := 'records which are loaded in C3D.';
-when 'U' then status_legend := 'records which are Updated in C3D.';
-else status_legend := 'records with other status.';
-end case;
-utl_file.putf(file_hdl, 'There are '||i.reccount|| ' '|| status_legend||'\n\n');
-end loop;
-dbms_output.put_line ('B4 For Loop'); */
-
 
 sqlstmt := 'SELECT distinct oc_study, TEST_COMPONENT_ID, LABTEST_NAME, error_reason FROM NCI_LABS WHERE trunc(date_modified) = to_date('||''''||rptdate||''''||') and load_flag = '||''''||'E'||''''||
 ' and ( error_reason = '|| whrclause || ' order by oc_study, error_reason';
@@ -153,10 +137,8 @@ For i in 1..errcollection.count loop
 utl_file.putf(file_hdl,  'OC_STUDY : '||errcollection(i).oc_study ||',Test Component ID: '||errcollection(i).test_component_id ||', Lab Test Name:'||errcollection(i).labtest_name||', ERROR: '||errcollection(i).error_reason||'\n\n' );
 end loop;
 
---For i in c_not_loading loop
---utl_file.putf(file_hdl,  'OC_STUDY : '||i.oc_study || ', ERROR: '||i.error_reason||'\n\n' );
---end loop;
 utl_file.fclose(file_hdl);
+utl_file.fcopy('REPORTS_DIR', 'ErrRpt.txt', 'REPORTS_DIR', 'ErrRpt'||dtime||'.txt');
 
 exception
 when OTHERS then
